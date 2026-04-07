@@ -1,0 +1,1844 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>무지개 정원</title>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ====CSS RESET & CROSS BROWSING==== */
+html{-webkit-text-size-adjust:100%;-moz-text-size-adjust:100%;text-size-adjust:100%;height:100%;}
+*{box-sizing:border-box;-webkit-box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:"Nanum Gothic","Apple SD Gothic Neo","Malgun Gothic",sans-serif;background:var(--cream);color:var(--td);min-height:100vh;min-height:-webkit-fill-available;overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+img{max-width:100%;height:auto;display:block;}
+button{font-family:inherit;-webkit-appearance:none;appearance:none;cursor:pointer;}
+input,textarea{font-family:inherit;-webkit-appearance:none;appearance:none;}
+
+/* ====반응형 컨테이너==== */
+#mainApp,#splash{max-width:480px;margin:0 auto;position:relative;}
+#splash{position:fixed;inset:0;max-width:100%;} 
+
+/* ====PC 대응==== */
+@media(min-width:481px){
+  body{background:#e8ddd5;}
+  #mainApp{box-shadow:0 0 40px rgba(0,0,0,.15);min-height:100vh;background:var(--cream);}
+  .mo>div{max-width:440px;margin:0 auto;}
+}
+
+/* ====작은 폰 대응==== */
+@media(max-width:360px){
+  .card{padding:10px;}
+  .ti{font-size:.6rem;}
+  .nav-icon{font-size:1.2rem;}
+}
+
+/* ====iOS safe area==== */
+@supports(padding:max(0px)){
+  body{padding-bottom:env(safe-area-inset-bottom);}
+  .bottom-nav{padding-bottom:max(8px,env(safe-area-inset-bottom));}
+}
+
+:root{--peach:#f5c6a0;--rose:#e8a4b8;--gold:#d4a853;--cream:#fdf6ee;--wb:#8b6355;--td:#4a3728;--paper:#fef9f0;}
+/* reset moved to top */
+.serif{font-family:"Nanum Myeongjo",serif;}
+/* ====SPLASH==== */
+#splash{position:fixed;inset:0;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;overflow:hidden;}
+#splashBg{position:absolute;inset:0;background:url("./splash.jpg") center/cover no-repeat,linear-gradient(160deg,#ffe4ec,#fff3cd,#e8f5e9);background-size:cover,cover;transition:filter 1.5s ease;filter:brightness(1.15) saturate(1.1);}
+#splashOv{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.03) 0%,rgba(10,5,2,.48) 42%,rgba(20,8,2,.82) 100%);}
+#splashContent{position:relative;z-index:2;width:100%;padding:0 20px 18px;text-align:center;}
+.scroll-wrap{height:160px;overflow:hidden;position:relative;margin-bottom:14px;}
+.scroll-inner{position:absolute;bottom:0;left:0;right:0;animation:scrollUp 26s ease-in-out forwards;}
+@keyframes scrollUp{0%{transform:translateY(105%);opacity:0}4%{opacity:1}85%{opacity:1;transform:translateY(-10%)}100%{transform:translateY(-105%);opacity:0}}
+.sq{font-family:"Nanum Myeongjo",serif;font-size:.9rem;color:rgba(255,248,220,1);line-height:2.3;letter-spacing:.03em;text-shadow:0 2px 8px rgba(0,0,0,.95),0 0 24px rgba(0,0,0,.8);}
+.sq-sub{font-size:.83rem;color:rgba(255,238,195,1);line-height:1.9;margin-top:9px;text-shadow:0 2px 7px rgba(0,0,0,.95);}
+.sq-line{width:28px;height:1.5px;background:rgba(212,168,83,.85);margin:9px auto;}
+@keyframes spDropBasic{0%{margin-top:0;opacity:0}6%{opacity:.85}90%{opacity:.7}100%{margin-top:110vh;opacity:0;transform:rotate(360deg)}}
+@keyframes spDropSun{0%{margin-top:0;opacity:0;transform:scale(.5) rotate(0deg)}6%{opacity:.9}100%{margin-top:110vh;opacity:0;transform:scale(1) rotate(180deg)}}
+@keyframes spDropLeaf{0%{margin-top:0;opacity:0;transform:rotate(-10deg) translateX(0)}6%{opacity:.9}33%{transform:rotate(100deg) translateX(18px)}66%{transform:rotate(260deg) translateX(-14px)}100%{margin-top:110vh;opacity:0;transform:rotate(400deg) translateX(10px)}}
+@keyframes spDropSnow{0%{margin-top:0;opacity:0;transform:translateX(0)}6%{opacity:.9}25%{transform:translateX(14px)}50%{transform:translateX(-10px)}75%{transform:translateX(12px)}100%{margin-top:110vh;opacity:0;transform:translateX(-8px)}}
+.splash-btns{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;width:100%;margin-bottom:8px;}
+.splash-btn{background:linear-gradient(135deg,rgba(212,168,83,.97),rgba(170,120,40,.93));color:#fff;font-family:"Nanum Myeongjo",serif;font-size:.9rem;font-weight:700;height:42px;padding:0 24px;border-radius:28px;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:100%;box-shadow:0 4px 18px rgba(0,0,0,.38);letter-spacing:.03em;-webkit-tap-highlight-color:transparent;}
+.splash-btn:active{transform:scale(.95);}
+.splash-mini-btn{background:rgba(255,255,255,.18);color:rgba(255,248,220,.95);font-size:.78rem;padding:0 12px;height:34px;border-radius:18px;border:1px solid rgba(255,248,220,.4);cursor:pointer;backdrop-filter:blur(4px);-webkit-tap-highlight-color:transparent;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;flex:1;}
+.splash-mini-btn:active{background:rgba(255,255,255,.28);}
+/* MOOD SELECTOR on splash */
+.mood-bar{display:flex;gap:6px;justify-content:center;margin-bottom:0;align-items:center;width:100%;}
+.mood-btn{font-size:1.1rem;width:34px;height:34px;min-width:34px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:rgba(255,255,255,.15);cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);transition:all .25s;-webkit-tap-highlight-color:transparent;flex-shrink:0;}
+.mood-btn.sel{border-color:rgba(255,215,80,.9);background:rgba(255,215,80,.22);transform:scale(1.15);}
+/* ====PWA==== */
+#pwaBanner{position:fixed;bottom:0;left:0;right:0;z-index:998;background:linear-gradient(135deg,rgba(255,250,232,.97),rgba(255,242,208,.95));border-top:1.5px solid rgba(212,168,83,.38);padding:11px 14px;display:none;align-items:center;gap:9px;box-shadow:0 -3px 16px rgba(0,0,0,.1);}
+.pwa-icon{font-size:1.5rem;flex-shrink:0;}
+.pwa-text{flex:1;}
+.pwa-title{font-family:"Nanum Myeongjo",serif;font-size:.86rem;font-weight:700;color:var(--wb);}
+.pwa-sub{font-size:.7rem;color:#aaa;margin-top:2px;line-height:1.4;}
+.pwa-close{font-size:1.1rem;color:#ccc;cursor:pointer;padding:4px;flex-shrink:0;}
+.pwa-add{background:linear-gradient(135deg,var(--gold),#c49040);color:#fff;border:none;border-radius:9px;padding:7px 12px;font-size:.76rem;font-weight:700;cursor:pointer;flex-shrink:0;white-space:nowrap;}
+/* ====BG==== */
+.gbg{position:fixed;inset:0;z-index:-2;background:linear-gradient(180deg,#fde8d8 0%,#fce4c8 15%,#e8f4e0 50%,#d4ead4 100%);transition:background 1.5s;}
+.gbg.mood2{background:linear-gradient(180deg,#1a0a2e 0%,#2d1b4e 40%,#1e1035 100%);}
+.gbg.mood3{background:linear-gradient(180deg,#2a1500 0%,#3d2000 40%,#1a0d00 100%);}
+.gbg.mood4{background:linear-gradient(180deg,#0a1f0a 0%,#1a3a1a 40%,#0d2a0d 100%);}
+.gbg.rainy{background:linear-gradient(180deg,#c8d8e8 0%,#d4dce8 40%,#c0ccd8 100%);}
+.gbg.snowy{background:linear-gradient(180deg,#e8f0f8 0%,#f0f4f8 40%,#e4ecf4 100%);}
+.arc{position:fixed;top:-60px;left:50%;transform:translateX(-50%);width:500px;height:300px;z-index:-1;border-radius:50% 50% 0 0;background:conic-gradient(from 0deg at 50% 100%,transparent 0deg 165deg,#ff6b6b 165deg 168deg,#ff9f40 168deg 171deg,#ffd166 171deg 174deg,#a8e063 174deg 177deg,#74c0fc 177deg 180deg,#a78bfa 180deg 183deg,transparent 183deg 360deg);opacity:.5;pointer-events:none;transition:opacity .8s;}
+.petal{position:fixed;pointer-events:none;z-index:-1;font-size:1.1rem;opacity:0;animation:fpetal linear infinite;}
+@keyframes fpetal{0%{transform:translateY(-20px) rotate(0deg);opacity:0}10%{opacity:.7}90%{opacity:.5}100%{transform:translateY(110vh) rotate(360deg);opacity:0}}
+.snowflake{position:fixed;pointer-events:none;z-index:-1;font-size:1rem;opacity:0;animation:fsnow linear infinite;}
+@keyframes fsnow{0%{transform:translateY(-20px);opacity:0}10%{opacity:.8}100%{transform:translateY(110vh) translateX(20px);opacity:0}}
+.raindrop{position:fixed;pointer-events:none;z-index:-1;width:2px;height:14px;background:linear-gradient(to bottom,transparent,#7eb0d8);opacity:0;animation:frain linear infinite;}
+@keyframes frain{0%{transform:translateY(-20px);opacity:0}10%{opacity:.6}100%{transform:translateY(110vh);opacity:0}}
+/* ====CARDS==== */
+.card{background:rgba(255,255,255,.82);backdrop-filter:blur(10px);border-radius:18px;border:1px solid rgba(255,255,255,.9);box-shadow:0 4px 22px rgba(180,140,100,.1);}
+.card-warm{background:linear-gradient(135deg,rgba(255,245,235,.92),rgba(255,235,215,.88));border:1px solid rgba(212,168,83,.25);}
+.paper-card{background:linear-gradient(135deg,#fef9f0,#fef5e4);border:1px solid rgba(180,140,80,.25);border-radius:16px;}
+/* ====PHOTO==== */
+.pf{width:148px;height:148px;border-radius:12px;border:4px solid var(--gold);box-shadow:0 0 0 4px rgba(212,168,83,.25),0 6px 20px rgba(0,0,0,.15);overflow:hidden;cursor:pointer;position:relative;transition:transform .3s;}
+.pf:active{transform:scale(.96);}
+.pp{width:100%;height:100%;background:linear-gradient(135deg,#fde8d8,#f5c6a0);display:flex;align-items:center;justify-content:center;font-size:2.4rem;}
+.pp-msg{width:100%;height:100%;background:linear-gradient(135deg,#fde8d8,#e8b898);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px;text-align:center;}
+.pp-msg p{font-family:"Nanum Myeongjo",serif;font-size:.62rem;color:#8b4a2a;line-height:1.6;}
+.hb{position:absolute;pointer-events:none;font-size:1.3rem;opacity:0;animation:hpop 1s ease-out forwards;}
+@keyframes hpop{0%{opacity:1;transform:scale(.5) translateY(0)}50%{opacity:1;transform:scale(1.2) translateY(-26px)}100%{opacity:0;transform:scale(.8) translateY(-52px)}}
+/* ====BUBBLE==== */
+.bubble{background:rgba(255,255,255,.92);border:1.5px solid var(--rose);border-radius:18px 18px 18px 4px;padding:11px 32px 11px 13px;font-size:.86rem;line-height:1.7;position:relative;cursor:pointer;box-shadow:0 2px 10px rgba(232,164,184,.18);transition:background .2s;}
+.bubble::after{content:"🔊";position:absolute;right:9px;top:10px;font-size:.74rem;opacity:.4;}
+.bubble:active{background:rgba(255,240,245,.95);}
+/* ====MISSION==== */
+.mc{background:linear-gradient(135deg,rgba(255,252,240,.96),rgba(255,245,220,.9));border:1.5px solid rgba(212,168,83,.28);border-radius:15px;padding:14px;position:relative;overflow:hidden;}
+.mc::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--peach),var(--gold),var(--rose));}
+.sb{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.67rem;font-weight:700;color:#fff;}
+/* ====GARDEN GRASS==== */
+.garden-bg-box{background:linear-gradient(180deg,rgba(168,210,140,.3) 0%,rgba(140,195,100,.5) 100%);border:1px solid rgba(100,160,80,.2);border-radius:14px;padding:10px 10px 6px;}
+.flower-item{display:inline-block;font-size:1.4rem;animation:bloom .5s ease-out;cursor:pointer;margin:1px;}
+@keyframes bloom{0%{transform:scale(0) rotate(-20deg);opacity:0}70%{transform:scale(1.15) rotate(5deg)}100%{transform:scale(1) rotate(0deg);opacity:1}}
+/* ====RITUALS==== */
+.rb{background:linear-gradient(135deg,rgba(255,255,255,.9),rgba(255,248,240,.85));border:1.5px solid rgba(212,168,83,.28);border-radius:13px;padding:9px 4px;text-align:center;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent;}
+.rb:active{transform:scale(.94);background:rgba(255,236,210,.9);}
+.ri{font-size:1.5rem;display:block;margin-bottom:2px;}
+.rl{font-size:.68rem;color:var(--wb);font-weight:700;}
+/* ====BUTTERFLY==== */
+.bfly{position:fixed;z-index:10;font-size:1.5rem;cursor:pointer;animation:flutter 3s ease-in-out infinite;pointer-events:all;transition:opacity .5s;}
+@keyframes flutter{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-10px) rotate(5deg)}}
+/* ====TABS==== */
+.tab-bar{display:flex;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-top:1px solid rgba(212,168,83,.18);position:fixed;bottom:0;left:0;right:0;z-index:50;padding-bottom:env(safe-area-inset-bottom,0px);}
+.ti{flex:1;padding:8px 2px 6px;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.ticon{font-size:1.25rem;display:block;}
+.tlabel{font-size:.58rem;color:#bbb;margin-top:1px;display:block;}
+.ti.active .tlabel{color:var(--gold);font-weight:700;}
+/* ====MODAL==== */
+.mo{position:fixed;inset:0;z-index:100;background:rgba(74,55,40,.5);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px;}
+.mb{background:var(--cream);border-radius:20px;padding:20px;width:100%;max-width:380px;max-height:88vh;overflow-y:auto;box-shadow:0 18px 54px rgba(0,0,0,.18);animation:sup .3s ease-out;}
+@keyframes sup{from{transform:translateY(36px);opacity:0}to{transform:translateY(0);opacity:1}}
+/* ====INPUTS==== */
+.ai{width:100%;padding:10px 12px;border:1.5px solid rgba(212,168,83,.38);border-radius:11px;background:rgba(255,255,255,.82);font-family:"Nanum Gothic",sans-serif;font-size:.88rem;color:var(--td);outline:none;transition:border-color .2s;}
+.ai:focus{border-color:var(--gold);}
+.bp{background:linear-gradient(135deg,var(--gold),#c49040);color:#fff;border:none;border-radius:12px;padding:11px 16px;font-family:"Nanum Myeongjo",serif;font-size:.96rem;font-weight:700;cursor:pointer;width:100%;box-shadow:0 4px 13px rgba(212,168,83,.3);}
+.bp:active{transform:scale(.97);}
+.bs{background:rgba(255,255,255,.82);color:var(--wb);border:1.5px solid rgba(212,168,83,.28);border-radius:11px;padding:9px 14px;font-family:"Nanum Gothic",sans-serif;font-size:.84rem;cursor:pointer;}
+/* ====SECTIONS==== */
+.sec{display:none;padding:12px 12px 84px;max-width:440px;margin:0 auto;}
+.sec.active{display:block;}
+/* ====TOAST==== */
+.toast{position:fixed;top:14px;left:50%;transform:translateX(-50%) translateY(-60px);background:rgba(74,55,40,.92);color:#fff;border-radius:24px;padding:8px 18px;font-size:.84rem;z-index:400;transition:transform .4s;white-space:nowrap;pointer-events:none;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+/* ====LETTER PAPER==== */
+.lp{background-color:rgba(255,252,245,.93);background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(212,168,83,.18) 27px,rgba(212,168,83,.18) 28px);border-radius:10px;padding:12px;min-height:120px;font-family:"Nanum Myeongjo",serif;line-height:28px;font-size:.88rem;color:var(--td);border:1px solid rgba(212,168,83,.28);width:100%;outline:none;resize:none;}
+/* ====DRAWER==== */
+.dc{background:rgba(255,255,255,.85);border-radius:12px;border:1px solid rgba(212,168,83,.18);padding:12px;}
+.pb{height:6px;border-radius:3px;background:rgba(212,168,83,.14);overflow:hidden;}
+.pf2{height:100%;background:linear-gradient(90deg,var(--peach),var(--gold));border-radius:3px;transition:width .8s ease;}
+/* ====WEATHER BTN==== */
+.wb2{border-radius:16px;padding:4px 9px;border:1.5px solid transparent;cursor:pointer;font-size:.72rem;font-weight:700;background:rgba(255,255,255,.72);-webkit-tap-highlight-color:transparent;}
+.wb2.sel{border-color:var(--gold);background:rgba(255,248,226,.9);}
+/* ====DDAY==== */
+.dday{background:linear-gradient(135deg,#fff8e8,#ffefc4);border:1px solid rgba(212,168,83,.28);border-radius:10px;padding:9px 11px;display:flex;align-items:center;gap:9px;}
+/* ====GALLERY==== */
+.gg{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;}
+.gi{border-radius:9px;overflow:hidden;aspect-ratio:1;cursor:pointer;position:relative;background:#f0e8d8;}
+.gi img,.gi video{width:100%;height:100%;object-fit:cover;display:block;}
+.gi .vb{position:absolute;bottom:3px;right:3px;background:rgba(0,0,0,.55);color:#fff;font-size:.6rem;padding:2px 4px;border-radius:5px;}
+.gi .del{position:absolute;top:3px;right:3px;background:rgba(220,50,50,.75);color:#fff;font-size:.7rem;border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;display:none;align-items:center;justify-content:center;}
+.gi:hover .del,.gi:focus .del{display:flex;}
+.ga{border:2px dashed rgba(212,168,83,.4);display:flex;align-items:center;justify-content:center;font-size:1.7rem;cursor:pointer;background:rgba(255,255,255,.6);aspect-ratio:1;border-radius:9px;-webkit-tap-highlight-color:transparent;}
+/* ====TIMECAPSULE==== */
+.tc-box{border-radius:16px;padding:16px;cursor:pointer;transition:transform .2s;position:relative;overflow:hidden;}
+.tc-box:active{transform:scale(.97);}
+.lock-icon{font-size:2rem;filter:drop-shadow(0 2px 4px rgba(0,0,0,.2));}
+@keyframes lockShake{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.lock-shake{animation:lockShake .4s ease-in-out;}
+/* ====WISDOM LAMP==== */
+.lamp-overlay{position:fixed;inset:0;z-index:200;background:rgba(10,5,0,.88);display:flex;align-items:center;justify-content:center;flex-direction:column;padding:32px;opacity:0;pointer-events:none;transition:opacity .6s;}
+.lamp-overlay.show{opacity:1;pointer-events:all;}
+.lamp-text{font-family:"Nanum Myeongjo",serif;font-size:1.08rem;color:rgba(255,230,140,.95);line-height:2;text-align:center;text-shadow:0 0 20px rgba(255,200,50,.6);max-width:320px;}
+.lamp-glow{font-size:3rem;animation:lampPulse 2s ease-in-out infinite;margin-bottom:18px;}
+@keyframes lampPulse{0%,100%{filter:drop-shadow(0 0 8px rgba(255,180,30,.5))}50%{filter:drop-shadow(0 0 22px rgba(255,200,50,.9))}}
+/* ====QUOTE==== */
+.q-block{text-align:center;padding:14px 10px 8px;}
+.q-line{width:24px;height:1px;background:rgba(212,168,83,.3);margin:0 auto;}
+.q-main{font-family:"Nanum Myeongjo",serif;font-size:.75rem;color:#b8967a;line-height:2.1;margin:9px 0;}
+.q-sub{font-size:.7rem;color:#c8a882;line-height:1.7;margin-top:7px;}
+/* ====BACK TO SPLASH BTN==== */
+.back-splash-btn{display:flex;align-items:center;gap:5px;background:rgba(255,248,230,.85);border:1px solid rgba(212,168,83,.3);border-radius:20px;padding:6px 13px;font-size:.74rem;color:var(--wb);font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+/* ====BACKUP NOTICE==== */
+.backup-notice{text-align:center;font-size:.64rem;color:#ccc;padding:8px 0 2px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="gbg" id="gbg"></div>
+<div class="arc" id="arc"></div>
+<div id="wxfx"></div>
+<div id="bflies"></div>
+<div class="toast" id="toast"></div>
+
+<!-- PWA BANNER -->
+<div id="pwaBanner">
+  <div class="pwa-icon">🌸</div>
+  <div class="pwa-text">
+    <div class="pwa-title">홈 화면에 추가하기</div>
+    <div class="pwa-sub" id="pwaSub">아이콘을 만들어두면 언제든 바로 열 수 있어요</div>
+  </div>
+  <button class="pwa-add" id="pwaAddBtn" onclick="doPwa()">추가</button>
+  <button class="pwa-add" id="pwaNeverBtn" onclick="neverPwa()" style="background:rgba(139,99,85,.18);color:var(--wb);font-size:.7rem;padding:6px 9px;">다시 안보기</button>
+  <span class="pwa-close" onclick="closePwa()">✕</span>
+</div>
+
+<!-- WISDOM LAMP OVERLAY -->
+<div class="lamp-overlay" id="lampOverlay" onclick="closeLamp()">
+  <div class="lamp-glow">🕯️</div>
+  <div class="lamp-text" id="lampText"></div>
+  <div style="margin-top:18px;font-size:.75rem;color:rgba(255,210,100,.6)">화면을 터치하면 닫혀요</div>
+  <button onclick="event.stopPropagation();speakLamp()" style="margin-top:12px;background:rgba(255,200,50,.2);color:rgba(255,230,140,.9);border:1px solid rgba(255,200,50,.4);border-radius:20px;padding:7px 18px;font-size:.8rem;cursor:pointer;">🔊 읽어주기</button>
+</div>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div id="splashBg"></div>
+  <div id="splashOv"></div>
+  <div id="splashContent">
+    <div class="scroll-wrap">
+      <div class="scroll-inner">
+        <div class="sq-line"></div>
+        <div class="sq">우리는 세 가지를 기억해야 합니다.<br><br>만남 뒤엔 헤어짐이 있음을 알아야 합니다.<br>만남이 기쁜만큼 헤어짐의 슬픔도 배워야 합니다.<br>만남의 기쁨만큼 헤어짐의 슬픔도 느껴야 합니다.<br><br>그리고... 보내줘야 합니다.</div>
+        <div class="sq-line" style="margin-top:9px"></div>
+        <div class="sq-sub">그래야 마음속 깊이 사랑하고<br>그들을 떠나보낼 수 있습니다.</div>
+      </div>
+    </div>
+    <!-- 큰 입장 버튼 -->
+    <div class="splash-btns">
+      <button class="splash-btn" onclick="enterApp()">무지개 정원 들어가기 🌈</button>
+    </div>
+    <!-- 이미지 변경 + 무드 버튼 -->
+    <div class="mood-bar" id="moodBar" style="margin-top:12px">
+      <button class="splash-mini-btn" onclick="changeSplashImg()">🖼️ 정원 이미지 변경</button>
+      <button class="mood-btn sel" data-mood="1" onclick="setSplashMood(1)" title="봄">🌸</button>
+      <button class="mood-btn" data-mood="2" onclick="setSplashMood(2)" title="여름">☀️</button>
+      <button class="mood-btn" data-mood="3" onclick="setSplashMood(3)" title="가을">🍂</button>
+      <button class="mood-btn" data-mood="4" onclick="setSplashMood(4)" title="겨울">❄️</button>
+    </div>
+    <input type="file" id="splashImgInput" accept="image/*" style="display:none" onchange="applySplashImg(this)">
+  </div>
+</div>
+
+<!-- SETUP MODAL -->
+<div class="mo" id="setupModal" style="display:none">
+  <div class="mb">
+    <div style="text-align:center;margin-bottom:12px"><div style="font-size:2rem">🌸</div><div class="serif" style="font-size:1.1rem;font-weight:700;color:var(--wb);margin-top:4px">부모님 추모 정원</div><div style="font-size:.74rem;color:#aaa;margin-top:3px">소중한 분들을 위한 따뜻한 공간을 만들어요</div></div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="background:rgba(255,248,230,.7);border-radius:12px;padding:12px">
+        <div style="font-size:.75rem;font-weight:700;color:var(--wb);margin-bottom:7px">👨 아버지</div>
+        <input class="ai" id="sfn" placeholder="아버지 성함" maxlength="20" style="margin-bottom:5px">
+        <div style="display:flex;gap:5px;margin-bottom:5px">
+          <input class="ai" id="sfAnniv" type="date" placeholder="기일/추모일" style="flex:1">
+        </div>
+        <div style="display:flex;gap:5px;margin-bottom:5px">
+          <input class="ai" id="sfBirthM" type="number" placeholder="생신 월" min="1" max="12" style="flex:1" oninput="autoLunar('sf')">
+          <input class="ai" id="sfBirthD" type="number" placeholder="생신 일" min="1" max="31" style="flex:1" oninput="autoLunar('sf')">
+        </div>
+        <div style="font-size:.7rem;color:#bbb;margin-bottom:5px">양력 생신 (출생년도 입력 시 음력 자동계산)</div>
+        <div style="display:flex;gap:5px">
+          <input class="ai" id="sfBirthY" type="number" placeholder="출생 년도" min="1900" max="2000" style="flex:1.2" oninput="autoLunar('sf')">
+          <input class="ai" id="sfBirthLM" type="number" placeholder="음력 월(자동)" min="1" max="12" style="flex:1">
+          <input class="ai" id="sfBirthLD" type="number" placeholder="음력 일(자동)" min="1" max="31" style="flex:1">
+        </div>
+        <div style="margin-top:6px">
+          <div style="font-size:.7rem;color:#bbb;margin-bottom:3px">아버지 사진</div>
+          <div style="border:1.5px dashed rgba(212,168,83,.38);border-radius:9px;padding:9px;text-align:center;cursor:pointer;background:rgba(255,255,255,.5)" onclick="document.getElementById('sfPhoto').click()">
+            <div id="sfPhotoPreview" style="font-size:1.4rem">👨‍🦳</div>
+            <div style="font-size:.68rem;color:#ccc;margin-top:2px">사진 선택</div>
+          </div>
+          <input type="file" id="sfPhoto" accept="image/*" style="display:none" onchange="previewSetupPhoto('father',this)">
+        </div>
+      </div>
+      <div style="background:rgba(255,240,248,.7);border-radius:12px;padding:12px">
+        <div style="font-size:.75rem;font-weight:700;color:var(--wb);margin-bottom:7px">👩 어머니</div>
+        <input class="ai" id="smn" placeholder="어머니 성함" maxlength="20" style="margin-bottom:5px">
+        <div style="display:flex;gap:5px;margin-bottom:5px">
+          <input class="ai" id="smAnniv" type="date" placeholder="기일/추모일" style="flex:1">
+        </div>
+        <div style="display:flex;gap:5px;margin-bottom:5px">
+          <input class="ai" id="smBirthM" type="number" placeholder="생신 월" min="1" max="12" style="flex:1" oninput="autoLunar('sm')">
+          <input class="ai" id="smBirthD" type="number" placeholder="생신 일" min="1" max="31" style="flex:1" oninput="autoLunar('sm')">
+        </div>
+        <div style="font-size:.7rem;color:#bbb;margin-bottom:5px">양력 생신 (출생년도 입력 시 음력 자동계산)</div>
+        <div style="display:flex;gap:5px">
+          <input class="ai" id="smBirthY" type="number" placeholder="출생 년도" min="1900" max="2000" style="flex:1.2" oninput="autoLunar('sm')">
+          <input class="ai" id="smBirthLM" type="number" placeholder="음력 월(자동)" min="1" max="12" style="flex:1">
+          <input class="ai" id="smBirthLD" type="number" placeholder="음력 일" min="1" max="31" style="flex:1">
+        </div>
+        <div style="margin-top:6px">
+          <div style="font-size:.7rem;color:#bbb;margin-bottom:3px">어머니 사진</div>
+          <div style="border:1.5px dashed rgba(212,168,83,.38);border-radius:9px;padding:9px;text-align:center;cursor:pointer;background:rgba(255,255,255,.5)" onclick="document.getElementById('smPhoto').click()">
+            <div id="smPhotoPreview" style="font-size:1.4rem">👩‍🦳</div>
+            <div style="font-size:.68rem;color:#ccc;margin-top:2px">사진 선택</div>
+          </div>
+          <input type="file" id="smPhoto" accept="image/*" style="display:none" onchange="previewSetupPhoto('mother',this)">
+        </div>
+      </div>
+    </div>
+    <button class="bp" style="margin-top:13px" onclick="saveSetup()">정원 만들기 🌿</button>
+  </div>
+</div>
+
+<!-- MODALS (flower/tea/letter/butterfly/drawer/mission/gallery/confirm) -->
+<div class="mo" id="flowerModal" style="display:none"><div class="mb" style="text-align:center">
+  <div style="font-size:2rem;margin-bottom:4px">🌸🕯️</div>
+  <div class="serif" style="font-size:.98rem;font-weight:700;color:var(--wb);margin-bottom:12px">헌화 · 분향합니다</div>
+  <div style="font-size:.72rem;color:#c9a96e;margin-bottom:7px;letter-spacing:.04em">💐 헌화 — 꽃을 올립니다</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px">
+    <div class="rb" onclick="doHeonhwa('🌸')" style="font-size:1.6rem;padding:8px">🌸</div>
+    <div class="rb" onclick="doHeonhwa('🌺')" style="font-size:1.6rem;padding:8px">🌺</div>
+    <div class="rb" onclick="doHeonhwa('🌼')" style="font-size:1.6rem;padding:8px">🌼</div>
+    <div class="rb" onclick="doHeonhwa('🌹')" style="font-size:1.6rem;padding:8px">🌹</div>
+  </div>
+  <div style="font-size:.72rem;color:#c9a96e;margin-bottom:7px;letter-spacing:.04em">🕯️ 분향 — 향을 올립니다</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px">
+    <div class="rb" onclick="doBunhyang('🕯️')" style="font-size:1.6rem;padding:8px">🕯️</div>
+    <div class="rb" onclick="doBunhyang('🪔')" style="font-size:1.6rem;padding:8px">🪔</div>
+    <div class="rb" onclick="doBunhyang('✨')" style="font-size:1.6rem;padding:8px">✨</div>
+    <div class="rb" onclick="doBunhyang('🌙')" style="font-size:1.6rem;padding:8px">🌙</div>
+  </div>
+  <button class="bs" style="width:100%" onclick="om('flowerModal',0)">닫기</button>
+</div></div>
+
+<div class="mo" id="teaModal" style="display:none"><div class="mb" style="text-align:center">
+  <div style="font-size:2.2rem;margin-bottom:6px">☕</div>
+  <div class="serif" style="font-size:.98rem;font-weight:700;color:var(--wb)">따뜻한 차를 올립니다</div>
+  <div class="card-warm" style="border-radius:12px;padding:11px;margin:10px 0;font-size:.83rem;line-height:1.8;font-family:'Nanum Myeongjo',serif;color:var(--wb)" id="teaMsg"></div>
+  <button class="bp" onclick="om('teaModal',0)">감사히 받으셨겠지요 🙏</button>
+</div></div>
+
+<div class="mo" id="letterModal" style="display:none"><div class="mb">
+  <div class="serif" style="font-size:.98rem;font-weight:700;text-align:center;color:var(--wb);margin-bottom:9px">📝 편지 쓰기</div>
+  <textarea id="letterText" class="lp" placeholder="부모님께 하고 싶은 말을 편하게 적어보세요..."></textarea>
+  <div style="display:flex;gap:6px;margin-top:9px">
+    <button class="bs" style="flex:1" onclick="om('letterModal',0)">닫기</button>
+    <button class="bp" style="flex:1;width:auto" onclick="saveLetter()">보내기 💌</button>
+  </div>
+</div></div>
+
+<div class="mo" id="bfViewModal" style="display:none"><div class="mb" style="text-align:center">
+  <div style="font-size:1.9rem">🦋</div>
+  <div class="serif" style="font-size:.88rem;color:var(--wb);line-height:1.8;margin:9px 0 4px" id="bfViewText"></div>
+  <div style="font-size:.68rem;color:#ccc" id="bfViewDate"></div>
+  <div style="display:flex;gap:6px;margin-top:11px">
+    <button class="bs" style="flex:1" onclick="om('bfViewModal',0)">닫기</button>
+    <button class="bs" style="flex:1;color:#e05050;border-color:#e05050" onclick="deleteBfly()">삭제</button>
+  </div>
+</div></div>
+
+<div class="mo" id="addBfModal" style="display:none"><div class="mb">
+  <div class="serif" style="font-size:.98rem;font-weight:700;text-align:center;color:var(--wb);margin-bottom:3px">🦋 나비 방명록</div>
+  <div style="font-size:.72rem;text-align:center;color:#aaa;margin-bottom:9px">짧은 마음을 담으면 나비가 전달해드려요</div>
+  <input class="ai" id="bfName" placeholder="이름 (예: 큰딸)" maxlength="10" style="margin-bottom:5px">
+  <textarea class="ai" id="bfMsg" placeholder="하고 싶은 말을 적어주세요..." maxlength="100" style="height:68px;resize:none"></textarea>
+  <div style="display:flex;gap:6px;margin-top:9px">
+    <button class="bs" style="flex:1" onclick="om('addBfModal',0)">취소</button>
+    <button class="bp" style="flex:1;width:auto" onclick="addBfly()">날려보내기 🦋</button>
+  </div>
+</div></div>
+
+<div class="mo" id="drawerInputModal" style="display:none"><div class="mb">
+  <div class="serif" style="font-size:.96rem;font-weight:700;text-align:center;color:var(--wb);margin-bottom:9px" id="diTitle"></div>
+  <input class="ai" id="diKey" placeholder="제목" maxlength="30" style="margin-bottom:5px">
+  <textarea class="ai" id="diVal" placeholder="내용을 적어주세요..." style="height:78px;resize:none"></textarea>
+  <div style="display:flex;gap:6px;margin-top:9px">
+    <button class="bs" style="flex:1" onclick="om('drawerInputModal',0)">취소</button>
+    <button class="bp" style="flex:1;width:auto" onclick="saveDrawerItem()">저장 💾</button>
+  </div>
+</div></div>
+
+<div class="mo" id="missionDoneModal" style="display:none"><div class="mb" style="text-align:center">
+  <div style="font-size:2.6rem;animation:bloom .6s">🌻</div>
+  <div class="serif" style="font-size:.98rem;font-weight:700;color:var(--wb);margin-top:7px">미션 완료!</div>
+  <div style="font-size:.8rem;color:#888;margin:6px 0 12px;line-height:1.6" id="missionDoneMsg"></div>
+  <button class="bp" onclick="om('missionDoneModal',0)">추억 정원에 꽃이 피었어요 🌸</button>
+</div></div>
+
+<div class="mo" id="galleryViewer" style="display:none">
+  <div style="position:relative;width:100%;max-width:400px">
+    <button onclick="om('galleryViewer',0)" style="position:absolute;top:-34px;right:0;background:rgba(255,255,255,.2);border:none;color:#fff;font-size:1.3rem;cursor:pointer;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center">✕</button>
+    <div id="gvContent" style="border-radius:14px;overflow:hidden;background:#000;max-height:78vh;display:flex;align-items:center;justify-content:center"></div>
+    <div style="text-align:center;margin-top:8px;font-size:.72rem;color:rgba(255,255,255,.7)" id="gvInfo"></div>
+  </div>
+</div>
+
+<div class="mo" id="confirmModal" style="display:none"><div class="mb" style="text-align:center">
+  <div style="font-size:1.9rem;margin-bottom:7px" id="confIcon">❓</div>
+  <div class="serif" style="font-size:.98rem;font-weight:700;color:var(--wb);margin-bottom:5px" id="confTitle"></div>
+  <div style="font-size:.8rem;color:#888;margin-bottom:14px;line-height:1.6" id="confMsg"></div>
+  <div style="display:flex;gap:7px">
+    <button class="bs" style="flex:1" onclick="om('confirmModal',0)">취소</button>
+    <button class="bp" style="flex:1;width:auto" id="confOkBtn">확인</button>
+  </div>
+</div></div>
+
+<!-- 기일/생일 당일 팝업 -->
+<div id="anniversaryPopup" style="display:none;position:fixed;inset:0;z-index:300;align-items:flex-end;justify-content:center;padding:0 0 72px;background:rgba(74,55,40,.45);backdrop-filter:blur(3px);">
+  <div id="anniversaryPopupBox" style="background:var(--cream);border-radius:20px 20px 20px 20px;padding:20px;width:calc(100% - 32px);max-width:400px;box-shadow:0 -8px 32px rgba(0,0,0,.15);animation:sup .4s ease-out;position:relative;">
+    <button onclick="closeAnniversaryPopup()" style="position:absolute;top:12px;right:14px;background:none;border:none;font-size:1.1rem;color:#bbb;cursor:pointer;">✕</button>
+    <div style="font-size:1.5rem;text-align:center;margin-bottom:6px" id="apEmoji">🌸</div>
+    <div class="serif" style="font-size:.96rem;font-weight:700;color:var(--wb);text-align:center;margin-bottom:8px" id="apTitle">오늘은 특별한 날이에요</div>
+    <div style="background:linear-gradient(135deg,#fff8e8,#ffefc4);border-radius:11px;padding:13px;font-size:.8rem;color:var(--td);line-height:1.9;font-family:'Nanum Myeongjo',serif;margin-bottom:12px;">
+      이 작은 앱이 많은 분들에게 위로와 안식이 되길 간절히 바랍니다.<br>
+      더 많은 분들께 따뜻한 마음을 전하고, 다양한 무료 웹 개발을 위해 여러분의 작은 후원을 기다립니다.
+    </div>
+    <div style="display:flex;gap:7px;">
+      <button class="bp" style="flex:1;font-size:.84rem;" onclick="openDonateModal()">💛 행복한 동행</button>
+      <button class="bs" style="flex:1;font-size:.84rem;" onclick="openContactModal()">💬 소통창고</button>
+    </div>
+  </div>
+</div>
+
+<!-- TIMECAPSULE MODAL -->
+<div class="mo" id="tcModal" style="display:none"><div class="mb" style="text-align:center">
+  <div style="font-size:2.4rem;margin-bottom:6px" id="tcIcon">📮</div>
+  <div class="serif" style="font-size:1rem;font-weight:700;color:var(--wb);margin-bottom:4px" id="tcTitle"></div>
+  <div style="font-size:.72rem;color:#aaa;margin-bottom:12px" id="tcYear"></div>
+  <div class="paper-card" style="padding:16px;text-align:left;margin-bottom:14px">
+    <div class="serif" style="font-size:.88rem;color:var(--td);line-height:1.9" id="tcContent"></div>
+  </div>
+  <button class="bp" onclick="speakTC();om('tcModal',0)">🔊 읽어주기 & 닫기</button>
+</div></div>
+
+<!-- MAIN APP -->
+<div id="mainApp" style="display:none">
+
+<!-- HOME TAB -->
+<div id="tab-home" class="sec active">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px">
+    <div style="display:flex;align-items:center;gap:7px">
+      <button class="back-splash-btn" onclick="goSplash()">🌈 정원</button>
+      <div class="serif" style="font-size:.8rem;font-weight:700;color:var(--wb)" id="topGreet">안녕하세요</div>
+    </div>
+    <div style="display:flex;gap:3px">
+      <button class="wb2" id="wb-sunny" onclick="setWx('sunny')">☀️</button>
+      <button class="wb2" id="wb-rainy" onclick="setWx('rainy')">🌧️</button>
+      <button class="wb2" id="wb-snowy" onclick="setWx('snowy')">❄️</button>
+    </div>
+  </div>
+
+  <!-- Profile Card -->
+  <div class="card card-warm" style="padding:14px;margin-bottom:11px;text-align:center">
+    <div style="display:flex;justify-content:center;align-items:flex-start;gap:14px;margin-bottom:9px">
+      <div style="text-align:center">
+        <div class="pf" style="margin:0 auto 5px" id="fFrame" onclick="pclick('father')">
+          <div id="fPhoto"></div>
+        </div>
+        <div class="serif" style="font-weight:700;font-size:.83rem;color:var(--wb)" id="fName">아버지</div>
+      </div>
+      <div style="text-align:center">
+        <div class="pf" style="margin:0 auto 5px" id="mFrame" onclick="pclick('mother')">
+          <div id="mPhoto"></div>
+        </div>
+        <div class="serif" style="font-weight:700;font-size:.83rem;color:var(--wb)" id="mName">어머니</div>
+      </div>
+    </div>
+    <div class="bubble" id="bubble" onclick="speakBubble()">
+      <span id="bubText">잠시 기다려 주세요...</span>
+    </div>
+    <div style="font-size:.66rem;color:#ccc;margin-top:4px">말풍선을 누르면 목소리가 들려요 🔊</div>
+  </div>
+
+  <!-- D-day badges -->
+  <div id="ddaySection" style="margin-bottom:11px;display:flex;flex-direction:column;gap:6px"></div>
+
+  <!-- Ritual buttons (smaller) -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:11px">
+    <div class="rb" onclick="om('flowerModal',1)" style="background:linear-gradient(135deg,rgba(255,240,245,.92),rgba(255,220,230,.85))"><span class="ri">🌸🕯️</span><span class="rl">헌화·분향</span></div>
+    <div class="rb" onclick="openTea()"><span class="ri">☕</span><span class="rl">차 올리기</span></div>
+    <div class="rb" onclick="om('letterModal',1)"><span class="ri">💌</span><span class="rl">편지 쓰기</span></div>
+  </div>
+
+  <!-- Garden (추억정원 먼저) -->
+  <div style="margin-bottom:11px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <div class="serif" style="font-weight:700;font-size:.84rem;color:var(--wb)">🌿 추억 정원</div>
+      <span style="font-size:.72rem;color:var(--gold)" id="gardenCount">꽃 0송이</span>
+    </div>
+    <div class="garden-bg-box" id="gardenPreview">
+      <span style="color:#aaa;font-size:.72rem">미션을 완료하면 꽃이 피어납니다</span>
+    </div>
+  </div>
+
+  <!-- Mission (추억정원 아래) -->
+  <div class="mc" style="margin-bottom:11px">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
+      <div><span class="sb" id="mBadge" style="background:var(--gold)">1단계</span><div class="serif" style="font-weight:700;font-size:.88rem;color:var(--wb);margin-top:3px" id="mDay">오늘의 미션</div></div>
+      <div style="font-size:1.5rem" id="mEmoji">🌱</div>
+    </div>
+    <div style="font-size:.82rem;color:#666;line-height:1.6;margin-bottom:9px" id="mText">로딩 중...</div>
+    <button class="bp" style="font-size:.84rem;padding:9px" id="mBtn" onclick="completeM()">미션 완료 ✓</button>
+  </div>
+
+  <div class="q-block">
+    <div class="q-line"></div>
+    <div class="q-main">우리는 세 가지를 기억해야 합니다.<br><br>만남 뒤엔 헤어짐이 있음을 알아야 합니다.<br>만남이 기쁜만큼 헤어짐의 슬픔도 배워야 합니다.<br>만남의 기쁨만큼 헤어짐의 슬픔도 느껴야 합니다.<br><br>그리고... 보내줘야 합니다.</div>
+    <div class="q-line"></div>
+    <div class="q-sub">그래야 마음속 깊이 사랑하고<br>그들을 떠나보낼 수 있습니다.</div>
+  </div>
+  <div class="backup-notice">💾 소중한 기억이 사라지지 않도록 설정 → 데이터 백업을 주기적으로 해주세요</div>
+</div>
+
+<!-- MISSION TAB -->
+<div id="tab-mission" class="sec">
+  <div class="serif" style="font-size:1.1rem;font-weight:700;color:var(--wb);margin-bottom:3px">30일 미션 여정</div>
+  <div style="font-size:.72rem;color:#aaa;margin-bottom:11px">매일 하나씩, 마음으로 함께해요</div>
+  <div class="card" style="padding:11px;margin-bottom:11px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+      <span style="font-size:.72rem;font-weight:700;color:var(--wb)">전체 진행도</span>
+      <span style="font-size:.72rem;font-weight:700;color:var(--gold)" id="mPLabel">0 / 30</span>
+    </div>
+    <div class="pb"><div class="pf2" id="mPBar" style="width:0%"></div></div>
+  </div>
+  <div id="missionList" style="display:flex;flex-direction:column;gap:6px"></div>
+</div>
+
+<!-- GALLERY TAB -->
+<div id="tab-gallery" class="sec">
+  <div class="serif" style="font-size:1.1rem;font-weight:700;color:var(--wb);margin-bottom:3px">사진 &amp; 동영상</div>
+  <div style="font-size:.72rem;color:#aaa;margin-bottom:4px">부모님과의 소중한 순간들을 담아요</div>
+  <div style="font-size:.66rem;color:#ccc;margin-bottom:11px" id="galleryStorageInfo"></div>
+  <div class="gg" id="galleryGrid"><div class="ga" onclick="document.getElementById('galInput').click()">+</div></div>
+  <input type="file" id="galInput" accept="image/*,video/*" multiple style="display:none" onchange="addGallery(this)">
+  <div style="font-size:.68rem;color:#bbb;text-align:center;margin-top:8px">사진·동영상을 추가하려면 + 버튼을 눌러요<br>길게 누르면 삭제할 수 있어요</div>
+</div>
+
+<!-- BUTTERFLY TAB -->
+<div id="tab-butterfly" class="sec">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px">
+    <div class="serif" style="font-size:1.1rem;font-weight:700;color:var(--wb)">나비 방명록</div>
+    <button class="rb" style="padding:5px 11px;font-size:.76rem;font-weight:700" onclick="om('addBfModal',1)">+ 남기기</button>
+  </div>
+  <div style="font-size:.72rem;color:#aaa;margin-bottom:13px">가족의 마음을 나비에 담아 전해요</div>
+  <div id="bfList" style="display:flex;flex-direction:column;gap:7px"></div>
+</div>
+
+<!-- DRAWER TAB (기억의 서랍) -->
+<div id="tab-drawer" class="sec">
+  <div class="serif" style="font-size:1.1rem;font-weight:700;color:var(--wb);margin-bottom:3px">📦 기억의 서랍</div>
+  <div style="font-size:.72rem;color:#aaa;margin-bottom:12px">부모님이 남기신 소중한 것들을 담아두는 곳</div>
+
+  <!-- 타임캡슐 -->
+  <div style="margin-bottom:10px">
+    <div class="serif" style="font-size:.9rem;font-weight:700;color:var(--wb);margin-bottom:7px">📮 부모님의 편지 (타임캡슐)</div>
+    <div style="display:flex;gap:8px">
+      <div class="tc-box" style="flex:1;background:linear-gradient(135deg,#fff8e8,#ffefc4);border:1.5px solid rgba(212,168,83,.4)" onclick="openTC('father')">
+        <div class="lock-icon" id="tcFatherLock">🔒</div>
+        <div style="font-size:.8rem;font-weight:700;color:var(--wb);margin-top:5px" id="tcFatherTitle">아버지의 편지</div>
+        <div style="font-size:.68rem;color:#aaa;margin-top:2px" id="tcFatherSub"></div>
+      </div>
+      <div class="tc-box" style="flex:1;background:linear-gradient(135deg,#fff0f8,#ffe4f0);border:1.5px solid rgba(220,150,180,.4)" onclick="openTC('mother')">
+        <div class="lock-icon" id="tcMotherLock">🔒</div>
+        <div style="font-size:.8rem;font-weight:700;color:var(--wb);margin-top:5px" id="tcMotherTitle">어머니의 편지</div>
+        <div style="font-size:.68rem;color:#aaa;margin-top:2px" id="tcMotherSub"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 지혜의 등불 -->
+  <div class="card" style="padding:12px;margin-bottom:10px">
+    <div class="serif" style="font-weight:700;color:var(--wb);margin-bottom:4px">🕯️ 지혜의 등불</div>
+    <div style="font-size:.72rem;color:#aaa;margin-bottom:10px">지금 마음 상태를 고르면 부모님의 말씀이 찾아와요</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:10px">
+      <button class="rb" onclick="showWisdom('joy')" style="padding:7px 2px"><span style="font-size:1.2rem;display:block">😊</span><span style="font-size:.62rem;color:var(--wb)">기쁠때</span></button>
+      <button class="rb" onclick="showWisdom('hard')" style="padding:7px 2px"><span style="font-size:1.2rem;display:block">😔</span><span style="font-size:.62rem;color:var(--wb)">힘들때</span></button>
+      <button class="rb" onclick="showWisdom('sad')" style="padding:7px 2px"><span style="font-size:1.2rem;display:block">😢</span><span style="font-size:.62rem;color:var(--wb)">슬플때</span></button>
+      <button class="rb" onclick="showWisdom('sick')" style="padding:7px 2px"><span style="font-size:1.2rem;display:block">🤒</span><span style="font-size:.62rem;color:var(--wb)">아플때</span></button>
+      <button class="rb" onclick="showWisdom('miss')" style="padding:7px 2px"><span style="font-size:1.2rem;display:block">🌸</span><span style="font-size:.62rem;color:var(--wb)">보고싶</span></button>
+    </div>
+    <!-- 등록된 말씀 -->
+    <div style="border-top:1px solid rgba(212,168,83,.2);padding-top:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="font-size:.74rem;font-weight:700;color:var(--wb)">부모님 말씀 등록</div>
+        <button style="font-size:.72rem;font-weight:700;color:var(--gold);background:none;border:none;cursor:pointer" onclick="openDrawerInput('saying')">+ 추가</button>
+      </div>
+      <div id="sayingList"><div style="font-size:.72rem;color:#ccc">아직 등록된 말씀이 없어요</div></div>
+    </div>
+  </div>
+
+  <!-- 보낸 편지 / 기억 -->
+  <div class="card" style="padding:12px;margin-bottom:10px">
+    <div class="serif" style="font-weight:700;color:var(--wb);margin-bottom:7px">💌 보낸 편지들</div>
+    <div id="letterList"><div style="font-size:.72rem;color:#ccc">아직 편지가 없어요</div></div>
+  </div>
+  <!-- 개발자 이야기 -->
+  <div class="card" style="padding:12px;margin-bottom:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;" onclick="openDevStory()">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div class="serif" style="font-weight:700;color:var(--wb)">💛 개발자 이야기</div>
+      <span style="font-size:.72rem;color:var(--gold);font-weight:700;">보기 →</span>
+    </div>
+    <div style="font-size:.72rem;color:#aaa;margin-top:4px">이 앱을 만든 이야기와 후원 안내</div>
+  </div>
+</div>
+
+<!-- 개발자 이야기 모달 -->
+<div class="mo" id="devStoryModal" style="display:none" onclick="closeDevStory(event)">
+  <div class="mb" style="max-height:88vh;overflow-y:auto;padding:0;border-radius:20px;" onclick="event.stopPropagation()">
+    <!-- 헤더 -->
+    <div style="background:linear-gradient(135deg,#f9c74f,#f3722c);padding:22px 18px 18px;text-align:center;position:relative;border-radius:20px 20px 0 0;">
+      <button onclick="om('devStoryModal',0)" style="position:absolute;top:12px;right:14px;background:rgba(255,255,255,.25);border:none;border-radius:50%;width:28px;height:28px;font-size:1rem;color:#fff;cursor:pointer;line-height:1;">✕</button>
+      <div style="font-size:2.2rem;margin-bottom:6px">💛</div>
+      <div style="font-size:1.05rem;font-weight:700;color:#fff;letter-spacing:.5px;">개발자 이야기</div>
+    </div>
+    <!-- 상단 메시지 -->
+    <div style="padding:18px 16px 0;background:#fff;">
+      <div style="background:linear-gradient(135deg,#fff8e8,#ffefc4);border-radius:14px;padding:16px;font-size:.83rem;color:#5a4a2f;line-height:2;font-family:'Nanum Myeongjo',serif;text-align:left;border-left:3px solid #f9c74f;">
+        소통의 시작은 작은 관심에서 시작됩니다.<br>
+        이 작은 앱이 많은 분들에게 위로와 안식이 되길 간절히 바랍니다.<br><br>
+        더 많은 분들께 따뜻한 마음을 전하고, 다양한 무료 웹 개발을 위해 여러분의 작은 후원을 기다립니다.
+      </div>
+    </div>
+    <!-- 구분선 -->
+    <div style="display:flex;align-items:center;gap:8px;padding:14px 16px;background:#fff;">
+      <div style="flex:1;height:1px;background:linear-gradient(to right,transparent,#f9c74f,transparent);"></div>
+      <div style="font-size:.75rem;color:#c9a84c;font-weight:600;">✦ 개발자 소개 ✦</div>
+      <div style="flex:1;height:1px;background:linear-gradient(to left,transparent,#f9c74f,transparent);"></div>
+    </div>
+    <!-- 전문 분야 -->
+    <div style="padding:0 16px 18px;background:#fff;">
+      <div style="background:#fffdf5;border:1.5px solid rgba(212,168,83,.3);border-radius:14px;padding:16px;font-size:.82rem;color:#555;line-height:1.95;box-shadow:0 2px 10px rgba(212,168,83,.1);">
+        저는 지역축제, 이벤트, 팀빌딩 프로그램 개발 [강사 양성] 및 교육 전문가로 기업체, 공공기관, 종교단체, 학교, NGO단체 등 다양한 곳에서 활동하고 있으며 수입금 일부는 무료 웹 개발에 사용하고 있습니다.
+      </div>
+    </div>
+    <!-- 버튼 -->
+    <div style="display:flex;gap:8px;padding:0 16px 18px;background:#fff;border-radius:0 0 20px 20px;">
+      <button class="bp" style="flex:1;font-size:.88rem;" onclick="openDonateModal()">💛 행복한 동행</button>
+      <button class="bs" style="flex:1;font-size:.88rem;" onclick="openContactModal()">💬 소통창고</button>
+    </div>
+  </div>
+</div>
+
+<!-- 후원하기 모달 -->
+<div class="mo" id="donateModal" style="display:none" onclick="closeDonate(event)">
+  <div class="mb" style="text-align:center;" onclick="event.stopPropagation()">
+    <div style="font-size:2rem;margin-bottom:6px">💛</div>
+    <div class="serif" style="font-size:1rem;font-weight:700;color:var(--wb);margin-bottom:10px">후원 안내</div>
+    <div style="background:linear-gradient(135deg,#fff8e8,#ffefc4);border-radius:12px;padding:16px;margin-bottom:14px;font-size:.88rem;color:var(--td);line-height:2.1;font-family:'Nanum Myeongjo',serif;">
+      여러분의 작은 후원을 기다립니다.<br>
+      <span style="font-weight:700;color:var(--wb)">신한은행 341-02-464852</span><br>
+      <span style="font-size:.92rem;font-weight:700;color:var(--gold)">김재경</span>
+    </div>
+    <button class="bs" style="width:100%" onclick="om('donateModal',0)">닫기</button>
+  </div>
+</div>
+
+<!-- 연락처 모달 -->
+<div class="mo" id="contactModal" style="display:none" onclick="closeContact(event)">
+  <div class="mb" style="text-align:center;" onclick="event.stopPropagation()">
+    <div style="font-size:2rem;margin-bottom:6px">📞</div>
+    <div class="serif" style="font-size:1rem;font-weight:700;color:var(--wb);margin-bottom:12px">소통창고</div>
+    <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:14px;">
+      <a href="tel:010-4176-7384" style="text-decoration:none;">
+        <button class="bp" style="width:100%;font-size:.92rem;">📱 전화 걸기</button>
+      </a>
+      <a href="https://open.kakao.com/o/kimjaek23" target="_blank" style="text-decoration:none;">
+        <button style="width:100%;padding:11px;border-radius:12px;border:none;background:#FEE500;color:#3C1E1E;font-size:.92rem;font-weight:700;cursor:pointer;font-family:'Nanum Gothic',sans-serif;">💬 카카오톡</button>
+      </a>
+    </div>
+    <button class="bs" style="width:100%" onclick="om('contactModal',0)">닫기</button>
+  </div>
+</div>
+
+<!-- SETTINGS TAB -->
+<div id="tab-settings" class="sec">
+  <div class="serif" style="font-size:1.1rem;font-weight:700;color:var(--wb);margin-bottom:3px">설정</div>
+  <div style="font-size:.72rem;color:#aaa;margin-bottom:13px">앱 정보 및 데이터 관리</div>
+  <div style="display:flex;flex-direction:column;gap:9px">
+    <div class="card" style="padding:12px">
+      <div class="serif" style="font-weight:700;color:var(--wb);margin-bottom:10px">👨‍👩‍👧 부모님 정보</div>
+      <div style="background:rgba(255,248,230,.7);border-radius:10px;padding:10px;margin-bottom:8px">
+        <div style="font-size:.72rem;font-weight:700;color:var(--wb);margin-bottom:6px">👨 아버지</div>
+        <input class="ai" id="eFN" maxlength="20" placeholder="성함" style="margin-bottom:4px">
+        <div style="display:flex;gap:4px;margin-bottom:4px"><input class="ai" id="eFAnniv" type="date" placeholder="기일" style="flex:1"></div>
+        <div style="display:flex;gap:4px;margin-bottom:2px">
+          <input class="ai" id="eFBM" type="number" placeholder="양력 생신 월" min="1" max="12" style="flex:1" oninput="autoLunar('eF')">
+          <input class="ai" id="eFBD" type="number" placeholder="일" min="1" max="31" style="flex:1" oninput="autoLunar('eF')">
+        </div>
+        <div style="font-size:.7rem;color:#bbb;margin-bottom:3px">출생 년도 입력 시 음력 자동계산</div>
+        <div style="display:flex;gap:4px">
+          <input class="ai" id="eFBY" type="number" placeholder="출생 년도" min="1900" max="2000" style="flex:1.2" oninput="autoLunar('eF')">
+          <input class="ai" id="eFBLM" type="number" placeholder="음력 월(자동)" min="1" max="12" style="flex:1">
+          <input class="ai" id="eFBLD" type="number" placeholder="음력 일(자동)" min="1" max="31" style="flex:1">
+        </div>
+      </div>
+      <div style="background:rgba(255,240,248,.7);border-radius:10px;padding:10px;margin-bottom:8px">
+        <div style="font-size:.72rem;font-weight:700;color:var(--wb);margin-bottom:6px">👩 어머니</div>
+        <input class="ai" id="eMN" maxlength="20" placeholder="성함" style="margin-bottom:4px">
+        <div style="display:flex;gap:4px;margin-bottom:4px"><input class="ai" id="eMAnniv" type="date" placeholder="기일" style="flex:1"></div>
+        <div style="display:flex;gap:4px;margin-bottom:2px">
+          <input class="ai" id="eMBM" type="number" placeholder="양력 생신 월" min="1" max="12" style="flex:1" oninput="autoLunar('eM')">
+          <input class="ai" id="eMBD" type="number" placeholder="일" min="1" max="31" style="flex:1" oninput="autoLunar('eM')">
+        </div>
+        <div style="font-size:.7rem;color:#bbb;margin-bottom:3px">출생 년도 입력 시 음력 자동계산</div>
+        <div style="display:flex;gap:4px">
+          <input class="ai" id="eMBY" type="number" placeholder="출생 년도" min="1900" max="2000" style="flex:1.2" oninput="autoLunar('eM')">
+          <input class="ai" id="eMBLM" type="number" placeholder="음력 월(자동)" min="1" max="12" style="flex:1">
+          <input class="ai" id="eMBLD" type="number" placeholder="음력 일(자동)" min="1" max="31" style="flex:1">
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;">
+      <button class="bp" style="flex:2" onclick="saveSettings()">저장</button>
+      <button class="bs" style="flex:1;font-size:.8rem;" onclick="openSetupModal()">초기설정 보기</button>
+      </div>
+    </div>
+    <div class="card" style="padding:12px">
+      <div class="serif" style="font-weight:700;color:var(--wb);margin-bottom:9px">📷 사진 변경</div>
+      <div style="display:flex;gap:9px">
+        <div style="flex:1;text-align:center">
+          <div class="pf" style="width:72px;height:72px;border-radius:8px;margin:0 auto 5px"><div id="setFP" class="pp" style="font-size:1.2rem">👨‍🦳</div></div>
+          <button class="bs" style="font-size:.68rem;padding:5px;width:100%" onclick="document.getElementById('fpInput').click()">아버지 변경</button>
+          <button class="bs" style="font-size:.65rem;padding:4px;width:100%;margin-top:3px;color:#e88;" onclick="resetPhoto('father')">🗑️ 초기화</button>
+          <input type="file" id="fpInput" accept="image/*" style="display:none" onchange="updatePhoto('father',this)">
+        </div>
+        <div style="flex:1;text-align:center">
+          <div class="pf" style="width:72px;height:72px;border-radius:8px;margin:0 auto 5px"><div id="setMP" class="pp" style="font-size:1.2rem">👩‍🦳</div></div>
+          <button class="bs" style="font-size:.68rem;padding:5px;width:100%" onclick="document.getElementById('mpInput').click()">어머니 변경</button>
+          <button class="bs" style="font-size:.65rem;padding:4px;width:100%;margin-top:3px;color:#e88;" onclick="resetPhoto('mother')">🗑️ 초기화</button>
+          <input type="file" id="mpInput" accept="image/*" style="display:none" onchange="updatePhoto('mother',this)">
+        </div>
+      </div>
+    </div>
+    <div class="card" style="padding:12px">
+      <div class="serif" style="font-weight:700;color:var(--wb);margin-bottom:5px">💾 데이터 백업</div>
+      <div style="font-size:.72rem;color:#aaa;margin-bottom:7px;line-height:1.5">가족과 공유하거나 다른 기기에서 사용할 때 백업하세요.</div>
+      <div style="display:flex;gap:5px">
+        <button class="bs" style="flex:1;font-size:.78rem" onclick="exportData()">📤 내보내기</button>
+        <button class="bs" style="flex:1;font-size:.78rem" onclick="document.getElementById('importFile').click()">📥 불러오기</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)">
+      </div>
+    </div>
+    <div class="card" style="padding:12px">
+      <div class="serif" style="font-weight:700;color:var(--wb);margin-bottom:4px">🔄 미션 초기화</div>
+      <div style="font-size:.72rem;color:#aaa;margin-bottom:7px">30일 미션만 초기화됩니다. 추억 정원은 그대로 유지돼요.</div>
+      <button class="bs" style="width:100%;font-size:.82rem" onclick="confirmReset()">미션 초기화</button>
+    </div>
+    <div class="card" style="padding:12px">
+      <div class="serif" style="font-weight:700;color:var(--wb);margin-bottom:4px">📤 카카오톡으로 공유하기</div>
+      <div style="font-size:.72rem;color:#aaa;margin-bottom:7px;line-height:1.7">링크를 받으신 분들은 자동으로 빈 화면에서 시작해요.<br>우리 부모님 정보는 이 기기에만 저장되어 있어요 🔒</div>
+      <div style="background:rgba(255,248,230,.7);border-radius:10px;padding:10px;font-size:.76rem;color:var(--wb);line-height:1.8">
+        📋 공유 주소<br>
+        <span style="font-weight:700;color:var(--gold);word-break:break-all">inspiring-axolotl-f8ba1b.netlify.app</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB BAR -->
+<nav class="tab-bar">
+  <div class="ti active" id="tb-home" onclick="st('home')"><span class="ticon">🏡</span><span class="tlabel">홈</span></div>
+  <div class="ti" id="tb-mission" onclick="st('mission')"><span class="ticon">🌱</span><span class="tlabel">미션</span></div>
+  <div class="ti" id="tb-gallery" onclick="st('gallery')"><span class="ticon">📷</span><span class="tlabel">사진첩</span></div>
+  <div class="ti" id="tb-butterfly" onclick="st('butterfly')"><span class="ticon">🦋</span><span class="tlabel">방명록</span></div>
+  <div class="ti" id="tb-drawer" onclick="st('drawer')"><span class="ticon">📦</span><span class="tlabel">서랍</span></div>
+  <div class="ti" id="tb-settings" onclick="st('settings')"><span class="ticon">⚙️</span><span class="tlabel">설정</span></div>
+</nav>
+</div><!-- /mainApp -->
+
+<script>
+// ====STORAGE====
+function lg(k,d){try{var v=JSON.parse(localStorage.getItem("mg5_"+k));return(v!==null&&v!==undefined)?v:d;}catch(e){return d;}}
+function ls(k,v){try{localStorage.setItem("mg5_"+k,JSON.stringify(v));}catch(e){}}
+function fmtDate(d){
+  // locale 독립 날짜 포맷 YYYY.MM.DD - 모든 기기에서 동일하게 출력
+  var dt=d||new Date();
+  var y=dt.getFullYear();
+  var m=String(dt.getMonth()+1).padStart(2,"0");
+  var day=String(dt.getDate()).padStart(2,"0");
+  return y+"."+m+"."+day;
+}
+
+// ====DATA====
+var MISSIONS=[
+  {step:1,label:"연결",emoji:"🌱",text:"오늘 부모님의 성함을 소리 내어 세 번 불러보세요."},
+  {step:1,label:"연결",emoji:"🕯️",text:"부모님이 좋아하시던 노래를 한 곡 들어보세요."},
+  {step:1,label:"연결",emoji:"📖",text:"부모님과 함께한 가장 행복했던 순간 하나를 일기처럼 적어보세요."},
+  {step:1,label:"연결",emoji:"🍚",text:"부모님이 해주시던 음식 중 가장 맛있었던 것을 오늘 직접 만들어 드셔보세요."},
+  {step:1,label:"연결",emoji:"📸",text:"부모님과 찍은 사진 한 장을 꺼내어 5분간 바라보세요."},
+  {step:1,label:"연결",emoji:"🌸",text:"부모님께 드리고 싶은 말을 세 문장으로 적어 편지 보내기 기능으로 전해요."},
+  {step:1,label:"연결",emoji:"💐",text:"부모님이 좋아하셨던 꽃을 꽃 바치기 버튼으로 올려드리세요."},
+  {step:2,label:"기억",emoji:"🎶",text:"부모님이 자주 부르시던 노래나 말씀을 기억의 서랍에 기록해보세요."},
+  {step:2,label:"기억",emoji:"🍳",text:"부모님이 자주 해주시던 음식의 레시피를 기억하여 기억의 서랍에 저장해보세요."},
+  {step:2,label:"기억",emoji:"☕",text:"따뜻한 차 올리기 버튼으로 차 한 잔을 대접해드리세요."},
+  {step:2,label:"기억",emoji:"📝",text:"부모님이 자주 쓰시던 표현이나 말버릇을 지혜의 등불에 기록해보세요."},
+  {step:2,label:"기억",emoji:"🌙",text:"오늘 밤, 부모님 생각이 나는 것 세 가지를 적어보세요."},
+  {step:2,label:"기억",emoji:"🎁",text:"부모님이 주셨던 가장 소중한 선물이나 말씀을 기억의 서랍에 담아보세요."},
+  {step:2,label:"기억",emoji:"🏡",text:"어린 시절 부모님과 함께하던 장소나 풍경을 소중한 기억에 기록해보세요."},
+  {step:2,label:"기억",emoji:"🌿",text:"부모님이 가르쳐 주신 삶의 지혜 한 가지를 지혜의 등불에 담아보세요."},
+  {step:3,label:"일상",emoji:"🌅",text:"오늘 아침, 부모님을 생각하며 말풍선에 인사해보세요."},
+  {step:3,label:"일상",emoji:"🌧️",text:"비 오는 날 부모님이 떠오르나요? 오늘의 감정을 편지로 적어보세요."},
+  {step:3,label:"일상",emoji:"🍂",text:"계절이 바뀔 때 부모님 생각이 납니다. 오늘 밖의 풍경을 부모님께 설명하듯 적어보세요."},
+  {step:3,label:"일상",emoji:"🌟",text:"오늘 좋은 일이 있었나요? 부모님께 기쁜 소식을 나비 방명록에 남겨보세요."},
+  {step:3,label:"일상",emoji:"🙏",text:"오늘 감사한 것 세 가지를 부모님께 감사의 마음으로 적어보세요."},
+  {step:3,label:"일상",emoji:"🌻",text:"부모님 덕분에 지금의 내가 있음에 감사하며, 오늘 하루를 열심히 살아보세요."},
+  {step:3,label:"일상",emoji:"💪",text:"부모님이 자랑스러워하실 일 한 가지를 오늘 해보세요."},
+  {step:4,label:"동행",emoji:"🦋",text:"가족 중 한 명에게 오늘 전화나 메시지를 보내보세요."},
+  {step:4,label:"동행",emoji:"🌈",text:"오늘 하늘을 올려다보며 부모님에게 안부를 전해보세요."},
+  {step:4,label:"동행",emoji:"💝",text:"부모님의 이름으로 선행을 하나 베풀어보세요. 작은 친절도 좋아요."},
+  {step:4,label:"동행",emoji:"📚",text:"부모님이 즐겨 보시던 TV 프로나 책을 한 번 경험해보세요."},
+  {step:4,label:"동행",emoji:"🌿",text:"부모님을 생각하며 식물 하나를 돌보거나 꽃을 심어보세요."},
+  {step:4,label:"동행",emoji:"🎊",text:"가족과 함께 부모님을 기억하는 소소한 모임을 준비해보세요."},
+  {step:4,label:"동행",emoji:"🌷",text:"부모님이 좋아하셨을 것들을 가족과 함께 나누는 시간을 가져보세요."},
+  {step:4,label:"동행",emoji:"💫",text:"30일 여정을 마쳤습니다. 부모님은 언제나 마음속에 함께해요. 오늘도 사랑합니다."}
+];
+var SC={1:"#a8c8a0",2:"#74b8d8",3:"#d4a853",4:"#e8a4b8"};
+var TEAS=["따뜻한 차 한 잔, 고마워요. 너도 건강하게 지내렴.","차향이 참 좋구나. 네 마음이 느껴져.","이 따뜻함처럼 우리 마음도 늘 이어져 있단다.","차 한 잔에 담긴 네 사랑, 잘 받았어. 고맙다.","따뜻한 차처럼 너의 하루도 따뜻하길 바란다."];
+var BM={
+  morning:["좋은 아침이야, 잘 잤니? 오늘 하루도 건강하게 지내렴.","아침 밥은 꼭 먹고 다녀. 엄마 아빠는 늘 네 편이야.","새벽 공기가 좋구나. 우리 같이 이 아침을 느껴보자.","오늘도 환하게 웃으며 하루를 시작하렴. 네 미소가 우리의 햇살이야.","아침 이슬처럼 맑고 깨끗한 하루가 되길 바란다, 사랑하는 아가야.","부지런히 일어난 너가 자랑스럽구나. 오늘도 힘차게 달려보자.","잠을 잘 잤니? 꿈에서라도 우리 만났으면 좋겠다.","아침 햇살이 네 얼굴을 비추고 있구나. 오늘 하루도 평안하길.","밥 먹었어? 속이 든든해야 하루가 든든한 법이란다.","오늘 하루도 네가 하고 싶은 일 하나씩 해보렴. 응원하고 있어."],
+  afternoon:["점심은 든든히 먹었니? 무리하지 말고 쉬어가며 해.","오후 햇살이 따뜻하다. 잠깐 창밖을 바라봐 줘.","힘들면 언제든 여기 와서 쉬어가렴. 언제나 기다리고 있어.","하루 절반이 지났네. 잠깐 스트레칭도 하고 물도 마셔.","오늘 잘 하고 있어. 천천히, 네 속도대로 가면 돼.","점심 먹고 졸리지? 잠깐 눈 붙여도 괜찮아. 쉬어가렴.","오늘 어떤 일이 있었니? 나중에 다 얘기해줘.","네가 열심히 살아가는 모습이 눈에 선하구나.","오후에도 웃음을 잃지 말렴. 네 웃음이 주변을 밝힌단다.","힘든 일이 있더라도 금방 지나갈 거야. 괜찮아, 잘 할 수 있어."],
+  evening:["오늘 하루도 수고했어. 저녁은 맛있는 거 먹었니?","이렇게 찾아와 줘서 고마워. 네 얼굴 보니 마음이 따뜻하다.","저녁 노을이 참 예쁘지? 우리 함께 이 풍경을 보자.","하루 종일 애썼구나. 이제 편히 쉬렴.","저녁엔 가족들과 함께 따뜻한 시간 보내렴.","오늘 한 가지 잘 한 것을 생각해봐. 분명 있을 거야.","피곤하지? 오늘도 최선을 다했으니 그걸로 충분해.","하루가 끝나가는구나. 오늘도 고마워, 사랑스러운 아가야.","저녁 바람이 선선하지? 잠깐 바깥 공기 마시고 와.","오늘 하루 중 가장 행복했던 순간을 떠올려봐. 그 기억이 내일의 힘이야."],
+  night:["오늘도 잘 지냈니? 이제 푹 쉬어. 꿈에서 만나자.","늦은 밤까지 고생했어. 아빠 엄마는 항상 네 꿈을 응원해.","잠들기 전 우리 생각해줘서 고마워. 사랑한다.","이불 꼭 덮고 자렴. 감기 걸리면 안 되니까.","오늘 하루도 수고 많았어. 내일은 더 좋은 날이 될 거야.","달이 참 밝구나. 우리도 저 달빛 아래 함께 있는 것 같아.","좋은 꿈 꿔. 우리가 꿈에서 항상 지켜보고 있을게.","자기 전에 오늘 좋았던 일 하나만 생각하고 자렴.","밤이 깊었구나. 이제 그만 쉬어도 돼. 너 충분히 열심히 했어.","사랑한다, 우리 아가. 내일 또 보자."]
+};
+
+// 타임캡슐 편지 데이터
+var TC_LETTERS={
+  father:[
+    "세월이 빠르지? 인생의 길을 잃은 기분이 들 땐 네 마음의 소리를 믿어라. 아버지는 너를 믿는다.",
+    "가장의 무게에 너무 완벽하려 애쓰지 마라. 때로는 누군가에게 기댈 권리가 너에게도 있단다.",
+    "손에 꽉 쥔 것들을 조금은 내려놓아라. 비워야 비로소 평안이 찾아오는 법이란다.",
+    "품격 있게 익어가는 네 모습이 보기 좋구나. 네 경험이 이제는 타인을 비추는 등불이 되길 바란다.",
+    "아버지는 단 한 순간도 너를 응원하지 않은 적이 없다. 다시 시작하자, 사랑한다."
+  ],
+  mother:[
+    "내 강아지, 네가 벌써 중년이구나. 엄마는 늘 네 편이란다. 너는 내 평생의 자부심이었어.",
+    "사는 게 고단하지? 내가 너를 업어 키웠듯, 지금도 네 마음의 짐을 함께 나누고 싶단다.",
+    "누구의 부모이기 전에, 너는 그저 행복한 사람으로 살길 바란다. 오늘 하루는 너만을 위해 써보렴.",
+    "네 주름은 성실히 살아온 훈장이란다. 엄마는 네 안에서 영원히 함께 숨 쉬고 있단다.",
+    "사랑은 시간을 이긴단다. 5년이 흘러도 내 사랑은 처음처럼 너를 향해 있단다."
+  ]
+};
+
+// 지혜의 등불 격언
+var WISDOM={
+  joy:["기쁨은 나눌수록 배가 된다. 잘될 때일수록 주변을 살피는 큰 사람이 되렴.","좋은 일이 있을 땐 주변 사람들과 나눠야 그 기쁨이 진짜가 된단다.","오늘의 행복이 내일의 힘이 된다. 이 순간을 깊이 누려라.","잘 됐구나! 이럴 때일수록 감사한 마음을 잊지 말거라.","기쁜 일을 부모님께 먼저 알리고 싶은 마음, 그 마음이 효도란다.","겸손이 너의 자리를 지켜줄 것이다. 성공할수록 고개를 낮추렴.","좋은 날엔 나쁜 날을 대비하고, 나쁜 날엔 좋은 날을 기억해라.","행복은 특별한 것이 아니라 지금 이 순간을 아는 것이란다.","네가 기쁠 때 우리도 하늘에서 같이 기뻐하고 있단다.","오늘 이 기쁨을 오래오래 기억하렴. 힘든 날 꺼내 볼 수 있도록."],
+  hard:["겨울이 깊으면 봄이 멀지 않다. 지금의 고통은 너를 단단하게 만드는 대장간의 망치질이다.","힘들 때일수록 한 발짝만 내딛어라. 그 한 발이 길을 만든단다.","울고 싶을 땐 울어도 돼. 눈물을 삼키는 것이 강한 게 아니란다.","이 또한 지나간다. 세상에 영원한 고통은 없단다.","힘들 때 혼자 짊어지려 하지 마라. 나눠야 반이 된단다.","지금 네가 겪는 시련이 나중엔 소중한 경험이 될 거야.","막막할 땐 딱 오늘 하루만 생각해. 오늘 하루는 버틸 수 있잖아.","포기하고 싶을 때가 가장 가까운 때다. 조금만 더 버텨줘.","어렵다고 느끼는 건 그만큼 네가 진심으로 살고 있다는 증거야.","우리가 하늘에서 응원하고 있어. 혼자가 아니란다."],
+  sad:["눈물은 영혼을 씻어내는 비란다. 비가 온 뒤에 땅이 더 굳어지는 법이야.","마음껏 울어도 좋다. 슬픔을 참는 것이 용감한 게 아니란다.","슬플 때는 슬픔을 충분히 느껴라. 그래야 다음 날 일어설 수 있단다.","네 슬픔이 곧 지나갈 거야. 그리고 더 단단해진 네가 남을 거야.","슬픈 날엔 좋아하는 것을 해. 작은 위로가 큰 힘이 된단다.","가슴이 아프면 잠시 멈춰도 돼. 쉬어가는 것도 용기야.","슬픔 뒤에 반드시 기쁨이 온다. 이건 우리가 보장해줄게.","힘들 때 부모님 생각이 나는구나. 우리도 네 생각을 하고 있단다.","세상에 영원한 슬픔은 없단다. 조금만 기다려줘.","네가 슬플 때 우리가 옆에 있어줄 수 없어서 미안하구나. 그래도 항상 곁에 있어."],
+  sick:["건강이 제일이다. 너 자신을 돌보는 것이 가족을 사랑하는 첫걸음이란다.","몸이 아프면 쉬어야 해. 일보다 네가 더 중요해.","약 제때 챙겨 먹고 따뜻하게 쉬렴. 그게 빨리 낫는 방법이야.","몸이 보내는 신호를 무시하지 마라. 쉬라는 뜻이란다.","아플 때만큼은 다른 걱정 다 내려놓고 몸 챙기렴.","병원에 미루지 말고 빨리 가거라. 엄마 아빠 걱정된단다.","잘 먹고 잘 자야 면역력이 생기는 법이야. 오늘은 푹 쉬어.","네 몸이 집이란다. 집이 튼튼해야 꿈도 꿀 수 있어.","금방 나을 거야. 우리가 빨리 낫길 매일 빌고 있단다.","건강할 때 건강을 지켜야 해. 몸이 무너지면 다 무너진단다."],
+  miss:["보이지 않는다고 곁에 없는 게 아니란다. 네가 웃으면 나도 하늘에서 같이 웃고 있다.","보고 싶다는 마음은 우리가 사랑했다는 증거란다.","눈을 감고 바람 소리를 들어보렴. 내 목소리가 들릴 거다.","보고 싶을 땐 사진 한 장 꺼내 봐. 우리도 네 얼굴 보고 싶단다.","우리가 사라진 게 아니란다. 네 마음속에 언제나 살아있어.","그리움은 사랑이 남긴 흔적이야. 슬프기만 한 게 아니란다.","우리 생각날 때 맛있는 거 먹으렴. 그게 우리 마음이야.","네가 잘 지내는 것이 우리를 가장 기쁘게 하는 거야.","이렇게 찾아와줘서 고마워. 덕분에 우리도 네가 느껴진단다.","영원히 함께야. 죽음도 사랑을 끊을 순 없단다."]
+};
+
+// 나비 종류
+var BFLY_TYPES=["🦋","🦋","🪁","🦋","🦋","🪶","🦋","🦋","🌸","🦋"];
+
+// ====STATE====
+var S={
+  fn:"",mn:"",fp:null,mp:null,
+  fAnniv:null,mAnniv:null,
+  fBM:null,fBD:null,fBLM:null,fBLD:null,fBY:null,
+  mBM:null,mBD:null,mBLM:null,mBLD:null,mBY:null,
+  fAlive:true,mAlive:true,
+  missionsDone:[],garden:[],
+  butterflies:[],letters:[],sayings:[],memories:[],
+  gallery:[],weather:"sunny",
+  splashImg:null,splashMood:1,
+  startDate:null,
+  bflyTimers:{}
+};
+// loadS 후 null 문자열 "null" 정리
+function cleanS(){
+  // localStorage에서 "null" 문자열로 저장된 값 정리 (크로스 플랫폼 버그 방지)
+  var allKeys=Object.keys(S);
+  for(var i=0;i<allKeys.length;i++){
+    var v=S[allKeys[i]];
+    if(v==="null"||v==="undefined"||v===undefined){
+      S[allKeys[i]]=null;
+    }
+  }
+  // 숫자 필드는 숫자로 변환
+  var numKeys=["fBM","fBD","fBLM","fBLD","mBM","mBD","mBLM","mBLD"];
+  for(var j=0;j<numKeys.length;j++){
+    if(S[numKeys[j]]!==null && S[numKeys[j]]!==""){
+      var n=parseInt(S[numKeys[j]]);
+      S[numKeys[j]]=isNaN(n)?null:n;
+    }
+  }
+}
+var curDrawer="";var curBfIdx=-1;var pwaEvt=null;var lampCurrentText="";var tcCurrentText="";
+
+function loadS(){var ks=Object.keys(S);for(var i=0;i<ks.length;i++){var v=lg(ks[i],null);if(v!==null)S[ks[i]]=v;}}
+function saveS(){var ks=Object.keys(S);for(var i=0;i<ks.length;i++)ls(ks[i],S[ks[i]]);}
+
+// ====PWA====
+window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();pwaEvt=e;});
+function showPwa(){
+  var b=document.getElementById("pwaBanner");if(!b)return;
+  var st=window.navigator.standalone||window.matchMedia("(display-mode:standalone)").matches;
+  if(st)return;
+  if(lg("pwaNever",false))return; // 다시 안보기 누른 경우
+  var isIos=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  if(isIos){document.getElementById("pwaSub").textContent="Safari 하단 공유 버튼 → '홈 화면에 추가'를 눌러요";document.getElementById("pwaAddBtn").style.display="none";}
+  b.style.display="flex";
+}
+function doPwa(){if(pwaEvt){pwaEvt.prompt();pwaEvt.userChoice.then(function(){closePwa();});}else closePwa();}
+function closePwa(){var b=document.getElementById("pwaBanner");if(b)b.style.display="none";} // X: 다음 접속시 다시 보임
+function neverPwa(){ls("pwaNever",true);var b=document.getElementById("pwaBanner");if(b)b.style.display="none";} // 다시 안보기: 영구 숨김
+
+// ====INIT====
+window.addEventListener("DOMContentLoaded",function(){
+  loadS();cleanS();
+  if(!S.startDate){S.startDate=new Date().toISOString();ls("startDate",S.startDate);}
+  var bg=document.getElementById("splashBg");
+  if(S.splashImg){bg.style.backgroundImage='url("'+S.splashImg+'")';}
+  else{bg.style.backgroundImage='url("./splash.jpg"),linear-gradient(160deg,#ffe4ec,#fff3cd,#e8f5e9)';}
+  setSplashMood(S.splashMood||1,true);
+  spawnSplashParticles();
+  setTimeout(function(){showPwa();},3000);
+});
+
+function changeSplashImg(){document.getElementById("splashImgInput").click();}
+function applySplashImg(inp){
+  if(!inp.files||!inp.files[0])return;
+  var r=new FileReader();r.onload=function(e){
+    compressImg(e.target.result,function(c){
+      S.splashImg=c;ls("splashImg",c);
+      document.getElementById("splashBg").style.backgroundImage='url("'+c+'")';
+      showToast("정원 이미지가 변경되었어요 🌿");
+    },false);
+  };r.readAsDataURL(inp.files[0]);
+}
+
+// ====SPLASH MOOD====
+var MOOD_BG={1:"linear-gradient(to bottom,rgba(255,220,230,.08) 0%,rgba(180,60,80,.38) 42%,rgba(100,20,40,.72) 100%)",2:"linear-gradient(to bottom,rgba(255,240,180,.06) 0%,rgba(200,140,20,.32) 42%,rgba(120,70,0,.70) 100%)",3:"linear-gradient(to bottom,rgba(180,100,20,.08) 0%,rgba(140,70,10,.40) 42%,rgba(80,35,5,.76) 100%)",4:"linear-gradient(to bottom,rgba(200,220,255,.10) 0%,rgba(120,160,220,.38) 42%,rgba(60,90,160,.74) 100%)"};
+function setSplashMood(m,silent){
+  S.splashMood=m;if(!silent)ls("splashMood",m);
+  document.getElementById("splashOv").style.background=MOOD_BG[m]||MOOD_BG[1];
+  document.querySelectorAll(".mood-btn").forEach(function(b){b.classList.toggle("sel",parseInt(b.dataset.mood)===m);});
+  // app bg
+  var classes={1:"",2:" mood2",3:" mood3",4:" mood4"};
+  var bg=document.getElementById("gbg");
+  if(bg){var base="gbg";if(S.weather&&S.weather!=="sunny")base="gbg "+S.weather;bg.className=base+(classes[m]||"");}
+  var arc=document.getElementById("arc");
+  if(arc)arc.style.opacity=(m===1)?"0.5":"0.1";
+  // spawn splash particles
+  spawnSplashParticles(m);
+}
+
+// ====SPLASH PARTICLES====
+var _splashPTimer=null;
+function spawnSplashParticles(m){
+  var old=document.querySelectorAll(".sp-ptcl");
+  for(var i=0;i<old.length;i++)if(old[i].parentNode)old[i].parentNode.removeChild(old[i]);
+  clearInterval(_splashPTimer);
+  var sp=document.getElementById("splash");
+  if(!sp||sp.style.display==="none")return;
+  var cfgs={
+    1:{items:["🌸","🌺","🌷","✿"],anim:"spDropBasic",count:10,size:.9},
+    2:{items:["✦","☀","✧","★"],anim:"spDropSun",count:8,size:.8,color:"rgba(255,225,60,.95)"},
+    3:{items:["🍂","🍁","🍃"],anim:"spDropLeaf",count:10,size:.9},
+    4:{items:["❄","❅","❆","·"],anim:"spDropSnow",count:12,size:.8,color:"#d8f0ff"}
+  };
+  var cfg=cfgs[m]||cfgs[1];
+  function spawnOne(){
+    var p=document.createElement("span");
+    p.className="sp-ptcl";
+    p.textContent=cfg.items[Math.floor(Math.random()*cfg.items.length)];
+    var left=3+Math.random()*94;
+    var fs=cfg.size+(Math.random()*0.4);
+    var dur=(m===4)?(6+Math.random()*4):(9+Math.random()*6);
+    var delay=Math.random()*1.5;
+    p.style.cssText=[
+      "position:fixed",
+      "pointer-events:none",
+      "z-index:9999",
+      "left:"+left+"vw",
+      "top:-30px",
+      "margin-top:0",
+      "font-size:"+fs+"rem",
+      "opacity:0",
+      (cfg.color?"color:"+cfg.color:""),
+      "animation:"+cfg.anim+" "+dur+"s "+delay+"s linear forwards"
+    ].filter(Boolean).join(";");
+    document.body.appendChild(p);
+    setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);},(dur+delay+0.5)*1000);
+  }
+  for(var i=0;i<cfg.count;i++){
+    (function(idx){setTimeout(spawnOne, idx*400);})(i);
+  }
+  _splashPTimer=setInterval(function(){
+    var sp2=document.getElementById("splash");
+    if(!sp2||sp2.style.display==="none"){clearInterval(_splashPTimer);return;}
+    spawnOne();
+  },2000);
+}
+
+
+// ====ENTER APP====
+function enterApp(){
+  // clean up particles
+  var pts=document.querySelectorAll(".sp-ptcl");for(var i=0;i<pts.length;i++)if(pts[i].parentNode)pts[i].parentNode.removeChild(pts[i]);
+  clearInterval(_splashPTimer);
+  var sp=document.getElementById("splash");sp.style.transition="opacity .6s";sp.style.opacity="0";
+  setTimeout(function(){
+    sp.style.display="none";
+    if(!S.fn&&!S.mn){document.getElementById("setupModal").style.display="flex";}
+    else startApp();
+  },600);
+}
+function goSplash(){
+  document.getElementById("mainApp").style.display="none";
+  var sp=document.getElementById("splash");sp.style.display="flex";sp.style.opacity="1";sp.style.transition="none";
+}
+
+// ====SETUP====
+function previewSetupPhoto(who,inp){
+  if(!inp.files||!inp.files[0])return;
+  var r=new FileReader();r.onload=function(e){
+    compressImg(e.target.result,function(c){
+      var pid=who==="father"?"sfPhotoPreview":"smPhotoPreview";
+      document.getElementById(pid).innerHTML='<img src="'+c+'" style="width:48px;height:48px;object-fit:cover;border-radius:8px">';
+      S["_pp_"+who]=c;
+    });
+  };r.readAsDataURL(inp.files[0]);
+}
+function saveSetup(){
+  var fn=document.getElementById("sfn").value.trim(),mn=document.getElementById("smn").value.trim();
+  if(!fn&&!mn){showToast("성함을 하나 이상 입력해주세요 💛");return;}
+  S.fn=fn||"아버지"; S.mn=mn||"어머니";
+  S.fAnniv=document.getElementById("sfAnniv").value||null;
+  S.mAnniv=document.getElementById("smAnniv").value||null;
+  S.fBM=document.getElementById("sfBirthM").value||null;
+  S.fBD=document.getElementById("sfBirthD").value||null;
+  S.fBY=document.getElementById("sfBirthY")?document.getElementById("sfBirthY").value||null:null;
+  // 아버지 음력 자동계산
+  if(S.fBY&&S.fBM&&S.fBD){
+    var fl=solarToLunar(parseInt(S.fBY),parseInt(S.fBM),parseInt(S.fBD));
+    if(fl){S.fBLM=String(fl.m);S.fBLD=String(fl.d);}
+    else{S.fBLM=document.getElementById("sfBirthLM").value||null;S.fBLD=document.getElementById("sfBirthLD").value||null;}
+  } else {
+    S.fBLM=document.getElementById("sfBirthLM").value||null;
+    S.fBLD=document.getElementById("sfBirthLD").value||null;
+  }
+  S.mBM=document.getElementById("smBirthM").value||null;
+  S.mBD=document.getElementById("smBirthD").value||null;
+  S.mBY=document.getElementById("smBirthY")?document.getElementById("smBirthY").value||null:null;
+  // 어머니 음력 자동계산
+  if(S.mBY&&S.mBM&&S.mBD){
+    var ml=solarToLunar(parseInt(S.mBY),parseInt(S.mBM),parseInt(S.mBD));
+    if(ml){S.mBLM=String(ml.m);S.mBLD=String(ml.d);}
+    else{S.mBLM=document.getElementById("smBirthLM").value||null;S.mBLD=document.getElementById("smBirthLD").value||null;}
+  } else {
+    S.mBLM=document.getElementById("smBirthLM").value||null;
+    S.mBLD=document.getElementById("smBirthLD").value||null;
+  }
+  if(S._pp_father){S.fp=S._pp_father;delete S._pp_father;}
+  if(S._pp_mother){S.mp=S._pp_mother;delete S._pp_mother;}
+  // 명시적으로 각 키 저장 (saveS가 초기 S 키셋만 순회하는 버그 방지)
+  var keys=["fn","mn","fAnniv","mAnniv","fBM","fBD","fBLM","fBLD","mBM","mBD","mBLM","mBLD","fp","mp"];
+  for(var i=0;i<keys.length;i++) ls(keys[i], S[keys[i]]);
+  saveS();
+  document.getElementById("setupModal").style.display="none";
+  startApp();
+  showToast("저장되었습니다 ✨");
+}
+function compressImg(src,cb,isProfile){
+  var img=new Image();img.onload=function(){
+    // 프로필사진: 600px / 스플래시: 1200px 고화질
+    var mx=isProfile?600:1200;
+    var q=isProfile?0.85:0.92;
+    var r=Math.min(mx/img.width,mx/img.height,1);
+    var c=document.createElement("canvas");
+    c.width=Math.round(img.width*r);c.height=Math.round(img.height*r);
+    c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+    cb(c.toDataURL("image/jpeg",q));
+  };img.onerror=function(){cb(src);};img.src=src;
+}
+
+// ====START====
+function startApp(){
+  document.getElementById("mainApp").style.display="block";
+  setSplashMood(S.splashMood||1,true);
+  updateProfile();updateBubble();updateGarden();updateMissions();
+  updateDday();updateBflies();updateDrawers();updateSettingsFields();
+  setWx(S.weather||"sunny",true);spawnPetals();
+  updateTC();renderGallery();
+  setInterval(updateBubble,5*60*1000);
+  // cleanup old butterflies after 30min
+  scheduleBflyCleanup();
+  // 기일/생일 팝업 체크 (2초 후)
+  setTimeout(checkAnniversaryPopup, 2000);
+}
+
+// ====PROFILE====
+function updateProfile(){
+  // 설정값 우선: localStorage에서 직접 읽어 S 동기화
+  var storedFn=lg("fn",null); var storedMn=lg("mn",null);
+  if(storedFn!==null) S.fn=storedFn;
+  if(storedMn!==null) S.mn=storedMn;
+  var storedFp=lg("fp",null); var storedMp=lg("mp",null);
+  if(storedFp!==null) S.fp=storedFp;
+  if(storedMp!==null) S.mp=storedMp;
+  // 정보 입력한 분만 표시 (이름이 있고 기본값 "아버지"/"어머니"가 아닌 경우)
+  var fHas=S.fn && S.fn!=="아버지" && S.fn.trim()!=="";
+  var mHas=S.mn && S.mn!=="어머니" && S.mn.trim()!=="";
+  var fEl=document.getElementById("fFrame");
+  var mEl=document.getElementById("mFrame");
+  var fWrap=fEl?fEl.parentElement:null;
+  var mWrap=mEl?mEl.parentElement:null;
+  if(fWrap){fWrap.style.display=fHas?"":"none";}
+  if(mWrap){mWrap.style.display=mHas?"":"none";}
+  document.getElementById("fName").textContent=S.fn||"";
+  document.getElementById("mName").textContent=S.mn||"";
+  setPhoto("fPhoto",S.fp,"👨‍🦳",false);
+  setPhoto("mPhoto",S.mp,"👩‍🦳",false);
+  setPhoto("setFP",S.fp,"👨‍🦳",true);
+  setPhoto("setMP",S.mp,"👩‍🦳",true);
+  var h=new Date().getHours();
+  document.getElementById("topGreet").textContent=(h<5?"깊은 밤에도":h<9?"좋은 아침이에요":h<12?"오전 나들이":h<14?"점심은 드셨나요?":h<18?"좋은 오후예요":h<21?"저녁 시간이에요":"늦은 밤이에요")+" 🌸";
+}
+function setPhoto(id,photo,fb,small){
+  var el=document.getElementById(id);if(!el)return;
+  if(photo){el.innerHTML='<img src="'+photo+'" style="width:100%;height:100%;object-fit:cover;display:block">';el.className="";}
+  else{
+    if(!photo&&id==="fPhoto"&&!S.fp){el.innerHTML='<div class="pp-msg"><p>고맙습니다.<br>사랑합니다</p></div>';el.className="";}
+    else if(!photo&&id==="mPhoto"&&!S.mp){el.innerHTML='<div class="pp-msg"><p>고맙습니다.<br>사랑합니다</p></div>';el.className="";}
+    else{el.innerHTML=fb;el.className=small?"pp":"pp";}
+  }
+}
+function pclick(who){
+  var fr=document.getElementById(who==="father"?"fFrame":"mFrame");
+
+  var ms=["보고 싶어요 💕","사랑해요 ❤️","함께해줘서 고마워요 🌸","마음이 따뜻해져요 ✨"];
+  showToast(ms[Math.floor(Math.random()*ms.length)]);
+}
+function updatePhoto(who,inp){if(!inp.files||!inp.files[0])return;var r=new FileReader();r.onload=function(e){compressImg(e.target.result,function(c){if(who==="father")S.fp=c;else S.mp=c;ls(who==="father"?"fp":"mp",c);updateProfile();showToast("사진을 업데이트했어요 📷");},true);};r.readAsDataURL(inp.files[0]);}
+function resetPhoto(who){
+  showConfirm("🗑️","사진을 초기화할까요?","삭제하면 되돌릴 수 없어요.",function(){
+    if(who==="father"){S.fp=null;ls("fp",null);}
+    else{S.mp=null;ls("mp",null);}
+    updateProfile();
+    showToast("사진을 초기화했어요");
+  });
+}
+function openSetupModal(){
+  // 현재 S값으로 초기설정 모달 채우기
+  var el=function(id){return document.getElementById(id);};
+  if(el("sfn"))el("sfn").value=S.fn||"";
+  if(el("smn"))el("smn").value=S.mn||"";
+  if(el("sfAnniv"))el("sfAnniv").value=S.fAnniv||"";
+  if(el("smAnniv"))el("smAnniv").value=S.mAnniv||"";
+  if(el("sfBirthM"))el("sfBirthM").value=S.fBM||"";
+  if(el("sfBirthD"))el("sfBirthD").value=S.fBD||"";
+  if(el("sfBirthY"))el("sfBirthY").value=S.fBY||"";
+  if(el("sfBirthLM"))el("sfBirthLM").value=S.fBLM||"";
+  if(el("sfBirthLD"))el("sfBirthLD").value=S.fBLD||"";
+  if(el("smBirthM"))el("smBirthM").value=S.mBM||"";
+  if(el("smBirthD"))el("smBirthD").value=S.mBD||"";
+  if(el("smBirthY"))el("smBirthY").value=S.mBY||"";
+  if(el("smBirthLM"))el("smBirthLM").value=S.mBLM||"";
+  if(el("smBirthLD"))el("smBirthLD").value=S.mBLD||"";
+  document.getElementById("setupModal").style.display="flex";
+}
+
+// ====BUBBLE====
+function updateBubble(){
+  var h=new Date().getHours(),p=h<6?"night":h<11?"morning":h<17?"afternoon":h<21?"evening":"night";
+  var arr=BM[p];document.getElementById("bubText").textContent=arr[Math.floor(Math.random()*arr.length)];
+}
+function speakBubble(){speak(document.getElementById("bubText").textContent);}
+var _ttsGender=0;
+function speak(text){
+  if(!window.speechSynthesis){showToast("이 브라우저는 음성을 지원하지 않아요");return;}
+  window.speechSynthesis.cancel();
+  function doSpeak(voices){
+    var u=new SpeechSynthesisUtterance(text);
+    u.lang="ko-KR";
+    u.rate=0.82;
+    u.volume=0.90;
+    u.pitch=0.80;
+    var koVoices=voices.filter(function(v){return v.lang&&v.lang.indexOf("ko")>-1;});
+    if(koVoices.length>0){
+      var maleV=koVoices.filter(function(v){
+        var nm=v.name.toLowerCase();
+        return nm.indexOf("male")>-1||nm.indexOf("남")>-1||nm.indexOf("seojun")>-1||nm.indexOf("hyunsu")>-1;
+      });
+      var femaleV=koVoices.filter(function(v){
+        var nm=v.name.toLowerCase();
+        return nm.indexOf("female")>-1||nm.indexOf("여")>-1||nm.indexOf("yuna")>-1||nm.indexOf("sora")>-1;
+      });
+      if(_ttsGender===0 && maleV.length>0){u.voice=maleV[0];}
+      else if(_ttsGender===1 && femaleV.length>0){u.voice=femaleV[0];}
+      else if(koVoices.length>=2){u.voice=koVoices[_ttsGender%koVoices.length];}
+      else{u.voice=koVoices[0];}
+    }
+    _ttsGender=1-_ttsGender;
+    window.speechSynthesis.speak(u);
+  }
+  var v=window.speechSynthesis.getVoices();
+  if(v.length>0){doSpeak(v);}
+  else{window.speechSynthesis.onvoiceschanged=function(){doSpeak(window.speechSynthesis.getVoices());};}
+}
+
+// ====WEATHER====
+function setWx(w,silent){
+  S.weather=w;if(!silent)ls("weather",w);
+  ["sunny","rainy","snowy"].forEach(function(x){var el=document.getElementById("wb-"+x);if(el)el.classList.toggle("sel",x===w);});
+  var bg=document.getElementById("gbg");
+  if(bg){var mc=S.splashMood&&S.splashMood>1?" mood"+S.splashMood:"";bg.className="gbg"+(w==="sunny"?"":(" "+w))+mc;}
+  var fx=document.getElementById("wxfx");if(fx){fx.innerHTML="";if(w==="rainy")spawnRain(fx);else if(w==="snowy")spawnSnow(fx);}
+  spawnPetals();
+}
+function spawnRain(c){for(var i=0;i<40;i++){var d=document.createElement("div");d.className="raindrop";d.style.left=Math.random()*100+"vw";d.style.animationDuration=(0.6+Math.random()*0.4)+"s";d.style.animationDelay=(-Math.random()*2)+"s";c.appendChild(d);}}
+function spawnSnow(c){var fl=["❄","❅","❆","✦"];for(var i=0;i<25;i++){var s=document.createElement("div");s.className="snowflake";s.textContent=fl[Math.floor(Math.random()*fl.length)];s.style.left=Math.random()*100+"vw";s.style.animationDuration=(3+Math.random()*3)+"s";s.style.animationDelay=(-Math.random()*5)+"s";c.appendChild(s);}}
+function spawnPetals(){var old=document.querySelectorAll(".petal");for(var i=0;i<old.length;i++)if(old[i].parentNode)old[i].parentNode.removeChild(old[i]);if(S.weather!=="sunny")return;var pt=["🌸","🌺","🍃","✿","❀"];for(var i=0;i<12;i++){var p=document.createElement("div");p.className="petal";p.textContent=pt[Math.floor(Math.random()*pt.length)];p.style.left=Math.random()*100+"vw";p.style.animationDuration=(6+Math.random()*6)+"s";p.style.animationDelay=(-Math.random()*10)+"s";document.body.appendChild(p);}}
+
+// ====D-DAY====
+function dDiff(m,d){
+  var today=new Date(),target=new Date(today.getFullYear(),m-1,d);
+  if(target<today)target.setFullYear(today.getFullYear()+1);
+  return Math.ceil((target-today)/86400000);
+}
+// 음력 자동 계산 (양력→음력 근사값)
+function solarToLunar(year,month,day){
+  // 음력 변환 테이블 (기준일: 음력 1월 1일의 양력 날짜)
+  var lunarBase=[
+    [2020,1,25],[2021,2,12],[2022,2,1],[2023,1,22],
+    [2024,2,10],[2025,1,29],[2026,2,17],[2027,2,6],
+    [2028,1,26],[2029,2,13],[2030,2,3]
+  ];
+  // 월별 일수 (평달29, 큰달30, 윤달)
+  var lunarMonths={
+    2020:[30,29,30,29,30,29,30,29,30,29,30,30],
+    2021:[29,30,29,29,30,29,30,29,30,30,29,30],
+    2022:[30,29,30,29,29,30,29,30,29,30,29,30],
+    2023:[29,30,30,29,30,29,30,29,29,30,29,30],
+    2024:[30,29,30,30,29,30,29,30,29,29,30,29],
+    2025:[30,30,29,30,29,30,30,29,30,29,29,30],
+    2026:[29,30,29,30,29,30,30,29,30,30,29,29],
+    2027:[30,29,30,29,30,29,30,29,30,30,29,30],
+    2028:[29,30,29,30,29,29,30,29,30,30,29,30],
+    2029:[30,29,30,29,30,29,29,30,29,30,29,30],
+    2030:[30,30,29,30,29,30,29,29,30,29,30,29]
+  };
+  var base=null;
+  for(var i=0;i<lunarBase.length;i++){
+    if(lunarBase[i][0]===year){base=lunarBase[i];break;}
+  }
+  if(!base)return null;
+  var baseDate=new Date(base[0],base[1]-1,base[2]);
+  var target=new Date(year,month-1,day);
+  var diff=Math.round((target.getTime()-baseDate.getTime())/(1000*60*60*24));
+  if(diff<0)return null;
+  var months=lunarMonths[year]||[29,30,29,30,29,30,29,30,29,30,29,30];
+  var lm=1,ld=1,cnt=0;
+  for(var m=0;m<months.length;m++){
+    if(cnt+months[m]>diff){ld=diff-cnt+1;lm=m+1;break;}
+    cnt+=months[m];
+  }
+  return {m:lm,d:ld};
+}
+
+
+// 음력 실시간 자동계산
+function autoLunar(prefix){
+  var mEl=document.getElementById(prefix+"BirthM")||document.getElementById(prefix+"BM");
+  var dEl=document.getElementById(prefix+"BirthD")||document.getElementById(prefix+"BD");
+  var yEl=document.getElementById(prefix+"BirthY")||document.getElementById(prefix+"BY");
+  var lmEl=document.getElementById(prefix+"BirthLM")||document.getElementById(prefix+"BLM");
+  var ldEl=document.getElementById(prefix+"BirthLD")||document.getElementById(prefix+"BLD");
+  if(!mEl||!dEl||!yEl||!lmEl||!ldEl) return;
+  var m=parseInt(mEl.value),d=parseInt(dEl.value),y=parseInt(yEl.value);
+  if(m>=1&&m<=12&&d>=1&&d<=31&&y>=1920&&y<=2030){
+    var lunar=solarToLunar(y,m,d);
+    if(lunar){
+      lmEl.value=lunar.m;
+      ldEl.value=lunar.d;
+    }
+  }
+}
+
+
+function updateDday(){
+  var sec=document.getElementById("ddaySection");
+  if(!sec)return;
+  sec.innerHTML="";
+  var now=new Date();
+  now.setHours(0,0,0,0);
+
+  // D-day 계산
+  function calcDday(month,day){
+    var y=now.getFullYear();
+    var t=new Date(y,month-1,day);t.setHours(0,0,0,0);
+    if(t.getTime()<now.getTime())t.setFullYear(y+1);
+    return Math.round((t.getTime()-now.getTime())/(1000*60*60*24));
+  }
+
+  // 돌아가신 날로부터 경과일 계산 (윤달 포함)
+  function calcElapsed(dateStr){
+    var past=new Date(String(dateStr)+"T00:00:00");
+    if(isNaN(past.getTime()))return "";
+    var diff=Math.round((now.getTime()-past.getTime())/(1000*60*60*24));
+    if(diff<0)return "";
+    if(diff<365)return diff+"일";
+    var y=Math.floor(diff/365);
+    var rem=diff%365;
+    // 윤년 보정
+    var yrs=0,d=new Date(past);
+    while(true){var nx=new Date(d);nx.setFullYear(nx.getFullYear()+1);if(nx>now)break;d=nx;yrs++;}
+    var remDays=Math.round((now.getTime()-d.getTime())/(1000*60*60*24));
+    if(remDays===0)return yrs+"년";
+    return yrs+"년 "+remDays+"일";
+  }
+
+
+  function makeBadge(icon,annivStr,birthStr){
+    var div=document.createElement("div");
+    div.style.cssText="background:rgba(255,248,225,.08);border:1px solid rgba(212,168,83,.22);border-radius:10px;padding:7px 11px;font-size:.72rem;color:#f0dfa0;line-height:1.9;";
+    var html="<span style='font-size:1rem;margin-right:4px'>"+icon+"</span>";
+    if(annivStr)html+=annivStr;
+    if(birthStr)html+="&nbsp;&nbsp;<span style='color:#d0c090'>|</span>&nbsp;&nbsp;"+birthStr;
+    div.innerHTML=html;
+    sec.appendChild(div);
+  }
+
+  // ── 아버지
+  if(S.fAnniv && String(S.fAnniv).length>=8){
+    var fa=new Date(String(S.fAnniv)+"T00:00:00");
+    if(!isNaN(fa.getTime())){
+      var fm=fa.getMonth()+1,fd=fa.getDate();
+      var fdd=calcDday(fm,fd);
+      var elapsed=calcElapsed(S.fAnniv);
+      var dStr="기일&nbsp;<span style='color:#ffd080;font-weight:700'>D-"+fdd+"</span>&nbsp;"+fm+"."+fd
+               +(elapsed?"&nbsp;<span style='color:#c8d8a0;font-size:.68rem'>["+elapsed+"]</span>":"");
+      var bStr="";
+      var fbm=parseInt(S.fBM)||0,fbd=parseInt(S.fBD)||0;
+      if(fbm>0&&fbd>0){
+        var fby=parseInt(S.fBY)||new Date().getFullYear();
+        var lunar=solarToLunar(fby,fbm,fbd);
+        var lunarStr=lunar?"[음&nbsp;"+lunar.m+"."+lunar.d+"]"
+                    :(parseInt(S.fBLM)&&parseInt(S.fBLD)?"[음&nbsp;"+S.fBLM+"."+S.fBLD+"]":"");
+        var fbdd=calcDday(fbm,fbd);
+        bStr="생신&nbsp;<span style='color:#ffd080;font-weight:700'>D-"+fbdd+"</span>&nbsp;"+fbm+"."+fbd
+             +(lunarStr?"&nbsp;<span style='color:#c0d8f0;font-size:.68rem'>"+lunarStr+"</span>":"");
+      }
+      makeBadge("👨",dStr,bStr);
+    }
+  }
+
+  // ── 어머니
+  if(S.mAnniv && String(S.mAnniv).length>=8){
+    var ma=new Date(String(S.mAnniv)+"T00:00:00");
+    if(!isNaN(ma.getTime())){
+      var mm2=ma.getMonth()+1,md2=ma.getDate();
+      var mdd=calcDday(mm2,md2);
+      var elapsed2=calcElapsed(S.mAnniv);
+      var dStr2="기일&nbsp;<span style='color:#ffd080;font-weight:700'>D-"+mdd+"</span>&nbsp;"+mm2+"."+md2
+                +(elapsed2?"&nbsp;<span style='color:#c8d8a0;font-size:.68rem'>["+elapsed2+"]</span>":"");
+      var bStr2="";
+      var mbm=parseInt(S.mBM)||0,mbd2=parseInt(S.mBD)||0;
+      if(mbm>0&&mbd2>0){
+        var mby=parseInt(S.mBY)||new Date().getFullYear();
+        var lunar2=solarToLunar(mby,mbm,mbd2);
+        var lunarStr2=lunar2?"[음&nbsp;"+lunar2.m+"."+lunar2.d+"]"
+                     :(parseInt(S.mBLM)&&parseInt(S.mBLD)?"[음&nbsp;"+S.mBLM+"."+S.mBLD+"]":"");
+        var mbdd=calcDday(mbm,mbd2);
+        bStr2="생신&nbsp;<span style='color:#ffd080;font-weight:700'>D-"+mbdd+"</span>&nbsp;"+mbm+"."+mbd2
+              +(lunarStr2?"&nbsp;<span style='color:#c0d8f0;font-size:.68rem'>"+lunarStr2+"</span>":"");
+      }
+      makeBadge("👩",dStr2,bStr2);
+    }
+  }
+}
+
+// ====TIMECAPSULE====
+function getYearIdx(){
+  var sd=new Date(S.startDate||new Date().toISOString());
+  var now=new Date();
+  var years=Math.floor((now-sd)/(365.25*24*3600*1000));
+  return years%5;
+}
+function checkTCOpen(who){
+  var anniv=who==="father"?S.fAnniv:S.mAnniv;
+  var bm=who==="father"?parseInt(S.fBM||0):parseInt(S.mBM||0);
+  var bd=who==="father"?parseInt(S.fBD||0):parseInt(S.mBD||0);
+  var today=new Date();
+  var tm=today.getMonth()+1, td=today.getDate();
+  // 기일 체크
+  if(anniv){
+    var a=new Date(anniv);
+    if(tm===(a.getMonth()+1)&&td===a.getDate())return true;
+  }
+  // 양력 생신 체크
+  if(bm&&bd&&tm===bm&&td===bd)return true;
+  return false;
+}
+function updateTC(){
+  var fi=document.getElementById("tcFatherLock"),ft=document.getElementById("tcFatherTitle"),fs=document.getElementById("tcFatherSub");
+  var mi=document.getElementById("tcMotherLock"),mt=document.getElementById("tcMotherTitle"),ms=document.getElementById("tcMotherSub");
+  var yi=getYearIdx();
+  if(checkTCOpen("father")){fi.textContent="💌";fs.textContent="오늘 편지가 도착했어요!";}
+  else{fi.textContent="🔒";fs.textContent="기일 또는 생신에 열립니다";}
+  if(ft)ft.textContent=(S.fn||"아버지")+"의 편지";
+  if(checkTCOpen("mother")){mi.textContent="💌";ms.textContent="오늘 편지가 도착했어요!";}
+  else{mi.textContent="🔒";ms.textContent="기일 또는 생신에 열립니다";}
+  if(mt)mt.textContent=(S.mn||"어머니")+"의 편지";
+}
+function openTC(who){
+  if(!checkTCOpen(who)){
+    // shake lock
+    var lockEl=document.getElementById("tc"+who.charAt(0).toUpperCase()+who.slice(1)+"Lock");
+    if(lockEl){lockEl.classList.add("lock-shake");setTimeout(function(){lockEl.classList.remove("lock-shake");},500);}
+    showToast("기일 또는 생신(양력)에 편지가 열려요 🔒");return;
+  }
+  var yi=getYearIdx();
+  var letters=TC_LETTERS[who]||[];
+  var letter=letters[yi]||letters[0];
+  var names=who==="father"?(S.fn||"아버지"):(S.mn||"어머니");
+  document.getElementById("tcIcon").textContent="💌";
+  document.getElementById("tcTitle").textContent=names+"의 편지";
+  document.getElementById("tcYear").textContent=(yi+1)+"년차 — "+new Date().getFullYear()+"년";
+  document.getElementById("tcContent").textContent=letter;
+  tcCurrentText=letter;
+  om("tcModal",1);
+}
+function speakTC(){if(tcCurrentText)speak(tcCurrentText);}
+
+// ====WISDOM LAMP====
+function showWisdom(cat){
+  var arr=WISDOM[cat]||WISDOM.hard;
+  // also include user-registered sayings
+  var userSayings=S.sayings||[];
+  var allArr=arr.slice();
+  userSayings.forEach(function(s){if(s.val)allArr.push(s.val);});
+  var text=allArr[Math.floor(Math.random()*allArr.length)];
+  lampCurrentText=text;
+  document.getElementById("lampText").textContent=text;
+  document.getElementById("lampOverlay").classList.add("show");
+}
+function closeLamp(){document.getElementById("lampOverlay").classList.remove("show");}
+function speakLamp(){if(lampCurrentText)speak(lampCurrentText);}
+
+// ====MISSIONS====
+function getTodayDateStr(){var d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
+function getTodayM(){var n=(S.missionsDone||[]).length;if(n>=MISSIONS.length)n=n%MISSIONS.length;return{m:MISSIONS[n],day:n+1};}
+function isTodayMissionDone(){
+  var done=S.missionsDone||[];
+  if(done.length===0)return false;
+  var last=done[done.length-1];
+  if(!last||!last.date)return false;
+  var lastD=new Date(last.date);
+  var lastStr=lastD.getFullYear()+"-"+(lastD.getMonth()+1)+"-"+lastD.getDate();
+  return lastStr===getTodayDateStr();
+}
+function updateMissions(){
+  var info=getTodayM(),dc=(S.missionsDone||[]).length,pct=Math.round((dc%30)/30*100);
+  if(pct===0&&dc>0)pct=100;
+  var dispDc=dc%30;if(dc>0&&dispDc===0)dispDc=30;
+  document.getElementById("mPLabel").textContent=dispDc+" / 30";
+  document.getElementById("mPBar").style.width=pct+"%";
+  var m=info.m;
+  document.getElementById("mDay").textContent=info.day+"일차 미션";
+  document.getElementById("mText").textContent=m.text;
+  document.getElementById("mEmoji").textContent=m.emoji;
+  document.getElementById("mBadge").textContent=m.step+"단계·"+m.label;
+  document.getElementById("mBadge").style.background=SC[m.step];
+  // 오늘 이미 완료했으면 버튼 비활성화
+  var btn=document.getElementById("mBtn");
+  if(isTodayMissionDone()){
+    btn.disabled=true;btn.textContent="오늘 미션 완료 ✅";btn.style.opacity="0.5";
+  } else {
+    btn.disabled=false;btn.textContent="미션 완료 ✓";btn.style.opacity="1";
+  }
+  var list=document.getElementById("missionList");list.innerHTML="";
+  var startIdx=Math.floor(dc/30)*30;
+  for(var i=0;i<MISSIONS.length;i++){
+    var mm=MISSIONS[i],done=(dc>startIdx+i),today=(dc===startIdx+i);
+    var div=document.createElement("div");div.className="mc";div.style.opacity=done?"0.52":"1";div.style.marginBottom="6px";
+    div.innerHTML='<div style="display:flex;align-items:flex-start;gap:7px"><div style="font-size:1.25rem;flex-shrink:0;filter:'+(done?"grayscale(60%)":"none")+'">'+mm.emoji+'</div><div style="flex:1"><div style="display:flex;align-items:center;gap:4px;margin-bottom:2px"><span class="sb" style="background:'+(done?"#ccc":SC[mm.step])+'">'+mm.step+'단계</span><span style="font-size:.66rem;font-weight:700;color:'+(today?"var(--gold)":"#bbb")+'">'+(today?"→ 오늘":(i+1)+"일차")+'</span></div><div style="font-size:.79rem;color:'+(done?"#bbb":"#555")+';line-height:1.5">'+mm.text+'</div></div><div style="font-size:.9rem;flex-shrink:0">'+(done?"✅":"⬜")+'</div></div>';
+    list.appendChild(div);
+  }
+}
+function completeM(){
+  if(isTodayMissionDone()){showToast("오늘 미션은 이미 완료했어요 🌸 내일 다시 만나요!");return;}
+  var info=getTodayM();if(!info)return;
+  S.missionsDone=S.missionsDone||[];
+  S.missionsDone.push({day:info.day,date:new Date().toISOString()});
+  // 30일 완료되면 미션만 재시작 (정원 유지)
+  if(S.missionsDone.length>0&&S.missionsDone.length%30===0){
+    S.missionsDone=[];
+    ls("missionsDone",S.missionsDone);
+    updateMissions();
+    showToast("🌈 30일 미션 완료! 새로운 여정이 시작됩니다.");
+    document.getElementById("missionDoneMsg").textContent="30일 미션을 모두 완료했어요! 새 여정이 시작됩니다 🌈";
+    om("missionDoneModal",1);
+    return;
+  }
+  var fm=["🌸","🌼","🌺","🌹","🌻","🌷","💮","🏵️"];
+  S.garden=S.garden||[];S.garden.push(fm[Math.floor(Math.random()*fm.length)]);
+  saveS();updateMissions();updateGarden();
+  // 정원 22송이까지 채우고 23번째부터 초기화
+  if(S.garden.length>=23){
+    document.getElementById("missionDoneMsg").textContent="정원이 가득 찼습니다 🌿 새로운 정원을 꾸며주세요!";
+    om("missionDoneModal",1);
+    setTimeout(function(){S.garden=[];ls("garden",S.garden);updateGarden();},2500);
+    return;
+  }
+  document.getElementById("missionDoneMsg").textContent=info.day+"일차 미션 완료! 추억 정원에 꽃 한 송이가 피었어요 🌸 내일 다음 미션이 열려요.";
+  om("missionDoneModal",1);
+}
+function confirmReset(){
+  showConfirm("🔄","미션을 초기화할까요?","30일 미션이 처음부터 다시 시작됩니다.\n추억 정원은 그대로 유지됩니다.",function(){
+    S.missionsDone=[];
+    ls("missionsDone",S.missionsDone);
+    updateMissions();
+    showToast("미션이 초기화되었어요 🌱");
+  });
+}
+
+// ====GARDEN====
+function updateGarden(){
+  var g=S.garden||[];document.getElementById("gardenCount").textContent="꽃 "+g.length+"송이";
+  var el=document.getElementById("gardenPreview");
+  if(g.length===0){el.innerHTML='<span style="color:#aaa;font-size:.72rem">미션을 완료하면 꽃이 피어납니다</span>';return;}
+  var h="";for(var i=0;i<g.length;i++)h+='<span class="flower-item">'+g[i]+'</span>';
+  el.innerHTML=h;
+}
+
+// ====RITUALS====
+function offerFlower(f){
+  om("flowerModal",0);
+  S.garden=S.garden||[];S.garden.push(f);ls("garden",S.garden);updateGarden();
+  if((S.garden||[]).length>=23){
+    showToast("정원이 가득 찼습니다 🌿 새로운 정원을 꾸며주세요!");
+    setTimeout(function(){S.garden=[];ls("garden",S.garden);updateGarden();},2500);
+  }else{
+    showToast(f+" 꽃을 바쳤어요 🌸");
+  }
+}
+function doHeonhwa(f){
+  om("flowerModal",0);
+  S.garden=S.garden||[];S.garden.push(f);ls("garden",S.garden);updateGarden();
+  if((S.garden||[]).length>=23){
+    showToast("정원이 가득 찼습니다 🌿 새로운 정원을 꾸며주세요!");
+    setTimeout(function(){S.garden=[];ls("garden",S.garden);updateGarden();},2500);
+  }else{
+    showToast(f+" 사랑합니다. 제게 주신 삶과 추억을 소중히 간직하겠습니다. 🙏");
+  }
+}
+function doBunhyang(f){
+  om("flowerModal",0);
+  showToast(f+" 감사합니다. 제게 주신 삶과 추억을 소중히 간직하겠습니다. 🙏");
+}
+function openTea(){document.getElementById("teaMsg").textContent='"'+TEAS[Math.floor(Math.random()*TEAS.length)]+'"';om("teaModal",1);}
+function saveLetter(){var t=document.getElementById("letterText").value.trim();if(!t){showToast("편지 내용을 적어주세요 💌");return;}S.letters=S.letters||[];S.letters.unshift({text:t,date:fmtDate(new Date())});ls("letters",S.letters);document.getElementById("letterText").value="";om("letterModal",0);updateDrawers();showToast("편지를 전달했어요 💌");}
+
+// ====BUTTERFLY====
+var BFLY_EMOJIS=["🦋","🦋","🦋","🦋","🦋","🌺","🌸","🌼","🪁","✨"];
+var bflyNodes=[];var bflyHideTimer=null;
+
+function spawnBflies(){
+  var c=document.getElementById("bflies");c.innerHTML="";bflyNodes=[];
+  var msgs=S.butterflies||[];
+  var now=Date.now();
+  var recent=msgs.filter(function(m){return(now-(m.ts||0))<30*60*1000;});
+  var cnt=Math.min(recent.length,5);
+  for(var i=0;i<cnt;i++){(function(idx){
+    var b=document.createElement("div");b.className="bfly";
+    b.textContent=BFLY_EMOJIS[Math.floor(Math.random()*BFLY_EMOJIS.length)];
+    b.style.left=(8+Math.random()*78)+"vw";b.style.top=(12+Math.random()*50)+"vh";
+    b.style.animationDelay=(Math.random()*3)+"s";
+    var mi=msgs.indexOf(recent[idx]);
+    b.onclick=(function(mi2){return function(){
+      var msg=S.butterflies[mi2];if(msg){
+        curBfIdx=mi2;
+        document.getElementById("bfViewText").textContent='"'+msg.text+'"';
+        document.getElementById("bfViewDate").textContent="— "+msg.name+" · "+msg.date;
+        om("bfViewModal",1);
+      }
+    };})(mi);
+    c.appendChild(b);bflyNodes.push(b);
+  })(i);}
+}
+
+function scheduleBflyCleanup(){
+  var msgs=S.butterflies||[];var now=Date.now();
+  msgs.forEach(function(m,i){
+    var age=(now-(m.ts||0));var remain=30*60*1000-age;
+    if(remain>0){
+      setTimeout(function(){spawnBflies();},remain);
+    }
+  });
+}
+
+function addBfly(){
+  var nm=document.getElementById("bfName").value.trim()||"익명";
+  var mg=document.getElementById("bfMsg").value.trim();
+  if(!mg){showToast("내용을 적어주세요");return;}
+  S.butterflies=S.butterflies||[];
+  S.butterflies.unshift({name:nm,text:mg,date:fmtDate(new Date()),ts:Date.now()});
+  ls("butterflies",S.butterflies);
+  document.getElementById("bfName").value="";document.getElementById("bfMsg").value="";
+  om("addBfModal",0);updateBflies();spawnBflies();
+  showToast("나비가 마음을 전달하러 날아갔어요 🦋");
+  setTimeout(function(){spawnBflies();},30*60*1000);
+}
+
+function deleteBfly(){
+  if(curBfIdx<0||curBfIdx>=(S.butterflies||[]).length)return;
+  showConfirm("🗑️","방명록을 삭제할까요?","이 방명록이 영구 삭제됩니다.",function(){
+    S.butterflies.splice(curBfIdx,1);ls("butterflies",S.butterflies);
+    om("bfViewModal",0);updateBflies();spawnBflies();curBfIdx=-1;showToast("삭제했어요");
+  });
+}
+
+function updateBflies(){
+  var list=document.getElementById("bfList"),msgs=S.butterflies||[];
+  if(msgs.length===0){list.innerHTML='<div style="text-align:center;padding:24px 0;color:#ccc"><div style="font-size:2.2rem">🦋</div><div style="font-size:.78rem;margin-top:5px;line-height:1.5">아직 방명록이 없어요<br>첫 마음을 남겨보세요</div></div>';return;}
+  var h="";var now=Date.now();
+  for(var i=0;i<msgs.length;i++){
+    var m=msgs[i];var isRecent=(now-(m.ts||0))<30*60*1000;
+    h+='<div class="card" style="padding:11px;cursor:pointer" onclick="viewBfly('+i+')"><div style="display:flex;align-items:flex-start;gap:7px"><span style="font-size:1.2rem">'+BFLY_EMOJIS[i%BFLY_EMOJIS.length]+'</span><div style="flex:1"><div class="serif" style="font-size:.82rem;color:var(--td);line-height:1.5">"'+esc(m.text)+'"</div><div style="font-size:.67rem;color:#bbb;margin-top:2px">— '+esc(m.name)+" · "+m.date+(isRecent?' <span style="color:var(--gold)">•날아다니는 중</span>':"")+"</div></div></div></div>";
+  }
+  list.innerHTML=h;
+}
+
+function viewBfly(idx){
+  curBfIdx=idx;var m=S.butterflies[idx];if(!m)return;
+  document.getElementById("bfViewText").textContent='"'+m.text+'"';
+  document.getElementById("bfViewDate").textContent="— "+m.name+" · "+m.date;
+  om("bfViewModal",1);
+}
+
+// ====DRAWER====
+function openDrawerInput(t){curDrawer=t;var ts={saying:"💬 부모님 말씀 등록",memory:"📝 소중한 기억 추가"};document.getElementById("diTitle").textContent=ts[t]||"추가";document.getElementById("diKey").value="";document.getElementById("diVal").value="";om("drawerInputModal",1);}
+function saveDrawerItem(){
+  var k=document.getElementById("diKey").value.trim(),v=document.getElementById("diVal").value.trim();
+  if(!k||!v){showToast("제목과 내용을 모두 입력해주세요");return;}
+  var ak=curDrawer+"s",arr=S[ak]||[];arr.unshift({key:k,val:v,date:fmtDate(new Date())});
+  S[ak]=arr;ls(ak,arr);om("drawerInputModal",0);updateDrawers();showToast("소중한 기억을 담았어요 💛");
+}
+function updateDrawers(){
+  var ll=document.getElementById("letterList"),ls2=S.letters||[];
+  if(ls2.length===0){ll.innerHTML='<div style="font-size:.72rem;color:#ccc">아직 편지가 없어요</div>';}
+  else{
+    var h="";
+    for(var i=0;i<ls2.length;i++){
+      var m=ls2[i];
+      h+='<div class="dc" style="margin-bottom:7px;position:relative">';
+      h+='<div class="serif" style="font-size:.8rem;color:var(--td);line-height:1.5;padding-right:28px">'+esc(m.text.substring(0,80))+(m.text.length>80?"…":"")+'</div>';
+      h+='<div style="font-size:.66rem;color:#bbb;margin-top:2px">'+m.date+'</div>';
+      h+='<button onclick="deleteLetter('+i+')" style="position:absolute;top:4px;right:2px;background:none;border:none;font-size:.85rem;color:#ccc;cursor:pointer;padding:2px 5px;line-height:1">🗑️</button>';
+      h+='</div>';
+    }
+    ll.innerHTML=h;
+  }
+  renderDL("sayingList",S.sayings||[],"아직 등록된 말씀이 없어요");
+  renderDL("memoryList",S.memories||[],"아직 기록이 없어요");
+  updateTC();
+}
+function deleteLetter(idx){
+  showConfirm("🗑️","편지를 삭제할까요?","삭제하면 되돌릴 수 없어요.",function(){
+    S.letters=S.letters||[];
+    S.letters.splice(idx,1);
+    ls("letters",S.letters);
+    updateDrawers();
+    showToast("편지를 삭제했어요");
+  });
+}
+function renderDL(id,arr,empty){
+  var el=document.getElementById(id);if(!el)return;
+  if(arr.length===0){el.innerHTML='<div style="font-size:.72rem;color:#ccc">'+empty+'</div>';return;}
+  var h="";for(var i=0;i<arr.length;i++){var m=arr[i];h+='<div class="dc" style="margin-bottom:5px"><div style="font-size:.82rem;font-weight:700;color:var(--wb);margin-bottom:2px">'+esc(m.key)+'</div><div style="font-size:.75rem;color:#666;line-height:1.4">'+esc(m.val.substring(0,80))+(m.val.length>80?"…":"")+'</div><div style="font-size:.66rem;color:#ccc;margin-top:2px">'+m.date+'</div></div>';}
+  el.innerHTML=h;
+}
+
+// ====GALLERY====
+function addGallery(inp){
+  if(!inp.files||!inp.files.length)return;
+  S.gallery=S.gallery||[];
+  Array.from(inp.files).forEach(function(file){
+    var isVideo=file.type.startsWith("video/");
+    var r=new FileReader();
+    r.onload=function(e){
+      if(isVideo){
+        // 동영상도 base64로 저장 (탭 이동해도 유지됨)
+        var videoData=e.target.result;
+        S.gallery.push({type:"video",src:videoData,name:file.name,size:file.size,date:fmtDate(new Date())});
+        try{ls("gallery",S.gallery);}catch(ex){
+          // 용량 초과시 마지막 항목 제거 후 안내
+          S.gallery.pop();
+          showToast("동영상 용량이 너무 커서 저장할 수 없어요 😢");
+        }
+        renderGallery();updateGalleryInfo();
+      } else {
+        compressImg(e.target.result,function(c){
+          S.gallery.push({type:"image",src:c,size:file.size,date:fmtDate(new Date())});
+          ls("gallery",S.gallery);renderGallery();updateGalleryInfo();
+        });
+      }
+    };
+    r.readAsDataURL(file);
+  });
+  inp.value="";
+}
+function renderGallery(){
+  var grid=document.getElementById("galleryGrid");if(!grid)return;
+  var items=S.gallery||[];
+  var h='<div class="ga" onclick="document.getElementById(\'galInput\').click()">+</div>';
+  for(var i=items.length-1;i>=0;i--){
+    var it=items[i],ii=i;
+    if(it.type==="video"){h+='<div class="gi" onclick="viewGallery('+ii+')" oncontextmenu="delGallery('+ii+');return false"><video src="'+it.src+'" muted playsinline style="width:100%;height:100%;object-fit:cover"></video><span class="vb">▶</span></div>';}
+    else{h+='<div class="gi" onclick="viewGallery('+ii+')" oncontextmenu="delGallery('+ii+');return false"><img src="'+it.src+'" loading="lazy"></div>';}
+  }
+  grid.innerHTML=h;updateGalleryInfo();
+}
+function viewGallery(idx){
+  var it=(S.gallery||[])[idx];if(!it)return;
+  var vc=document.getElementById("gvContent");var info=document.getElementById("gvInfo");
+  if(it.type==="video"){vc.innerHTML='<video src="'+it.src+'" controls autoplay playsinline style="max-width:100%;max-height:78vh;border-radius:12px"></video>';}
+  else{vc.innerHTML='<img src="'+it.src+'" style="max-width:100%;max-height:78vh;border-radius:12px;object-fit:contain">';}
+  var sz=it.size?Math.round(it.size/1024)+"KB":"";
+  info.textContent=it.date+(sz?" · "+sz:"");
+  om("galleryViewer",1);
+}
+function delGallery(idx){
+  showConfirm("🗑️","사진/동영상을 삭제할까요?","삭제 후 복구할 수 없습니다.",function(){
+    S.gallery.splice(idx,1);ls("gallery",S.gallery);renderGallery();showToast("삭제했어요");
+  });
+}
+function updateGalleryInfo(){
+  var el=document.getElementById("galleryStorageInfo");if(!el)return;
+  var g=S.gallery||[];
+  var total=g.reduce(function(acc,it){return acc+(it.size||0);},0);
+  el.textContent="총 "+g.length+"개"+(total>0?" · 약"+Math.round(total/1024)+"KB":"")+" (동영상은 용량이 크면 저장이 안 될 수 있어요)";
+}
+
+// ====SETTINGS====
+function updateSettingsFields(){
+  document.getElementById("eFN").value=S.fn||"";document.getElementById("eMN").value=S.mn||"";
+  document.getElementById("eFAnniv").value=S.fAnniv||"";document.getElementById("eMAnniv").value=S.mAnniv||"";
+  document.getElementById("eFBM").value=S.fBM||"";document.getElementById("eFBD").value=S.fBD||"";
+  document.getElementById("eFBY").value=S.fBY||"";
+  document.getElementById("eFBLM").value=S.fBLM||"";document.getElementById("eFBLD").value=S.fBLD||"";
+  document.getElementById("eMBM").value=S.mBM||"";document.getElementById("eMBD").value=S.mBD||"";
+  document.getElementById("eMBY").value=S.mBY||"";
+  document.getElementById("eMBLM").value=S.mBLM||"";document.getElementById("eMBLD").value=S.mBLD||"";
+}
+function saveSettings(){
+  var newFn=document.getElementById("eFN").value.trim();
+  var newMn=document.getElementById("eMN").value.trim();
+  if(newFn) S.fn=newFn;
+  if(newMn) S.mn=newMn;
+  S.fAnniv=document.getElementById("eFAnniv").value||null;
+  S.mAnniv=document.getElementById("eMAnniv").value||null;
+  S.fBM=document.getElementById("eFBM").value||null;
+  S.fBD=document.getElementById("eFBD").value||null;
+  var eFBY=document.getElementById("eFBY");
+  S.fBY=eFBY&&eFBY.value?eFBY.value:null;
+  // 음력 자동계산
+  if(S.fBY&&S.fBM&&S.fBD){
+    var fl=solarToLunar(parseInt(S.fBY),parseInt(S.fBM),parseInt(S.fBD));
+    if(fl){S.fBLM=String(fl.m);S.fBLD=String(fl.d);}
+  } else {
+    S.fBLM=document.getElementById("eFBLM").value||null;
+    S.fBLD=document.getElementById("eFBLD").value||null;
+  }
+  S.mBM=document.getElementById("eMBM").value||null;
+  S.mBD=document.getElementById("eMBD").value||null;
+  var eMBY=document.getElementById("eMBY");
+  S.mBY=eMBY&&eMBY.value?eMBY.value:null;
+  if(S.mBY&&S.mBM&&S.mBD){
+    var ml=solarToLunar(parseInt(S.mBY),parseInt(S.mBM),parseInt(S.mBD));
+    if(ml){S.mBLM=String(ml.m);S.mBLD=String(ml.d);}
+  } else {
+    S.mBLM=document.getElementById("eMBLM").value||null;
+    S.mBLD=document.getElementById("eMBLD").value||null;
+  }
+  // 모든 키 명시적 저장
+  var keys=["fn","mn","fAnniv","mAnniv","fBM","fBD","fBY","fBLM","fBLD","mBM","mBD","mBY","mBLM","mBLD","fp","mp"];
+  for(var i=0;i<keys.length;i++) ls(keys[i], S[keys[i]]);
+  saveS();
+  updateProfile();updateDday();updateTC();updateSettingsFields();
+  showToast("저장했어요 ✨");
+}
+
+// ====BACKUP====
+function exportData(){
+  var d={},ks=["fn","mn","fp","mp","fAnniv","mAnniv","fBM","fBD","fBLM","fBLD","mBM","mBD","mBLM","mBLD","missionsDone","garden","butterflies","letters","sayings","memories","startDate"];
+  for(var i=0;i<ks.length;i++)d[ks[i]]=S[ks[i]];
+  var blob=new Blob([JSON.stringify(d,null,2)],{type:"application/json"});var url=URL.createObjectURL(blob);
+  var a=document.createElement("a");a.href=url;a.download="무지개정원_백업.json";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+function importData(inp){if(!inp.files||!inp.files[0])return;var r=new FileReader();r.onload=function(e){try{var d=JSON.parse(e.target.result);var ks=Object.keys(d);for(var i=0;i<ks.length;i++){S[ks[i]]=d[ks[i]];ls(ks[i],d[ks[i]]);}showToast("데이터를 불러왔어요 ✅");updateProfile();updateGarden();updateMissions();updateDday();updateBflies();updateDrawers();updateSettingsFields();}catch(e2){showToast("파일을 읽을 수 없어요");}};r.readAsText(inp.files[0]);}
+
+// ====TABS====
+function st(t){var ss=document.querySelectorAll(".sec"),bs=document.querySelectorAll(".ti");for(var i=0;i<ss.length;i++)ss[i].classList.remove("active");for(var i=0;i<bs.length;i++)bs[i].classList.remove("active");var s=document.getElementById("tab-"+t),b=document.getElementById("tb-"+t);if(s)s.classList.add("active");if(b)b.classList.add("active");if(t==="butterfly")spawnBflies();}
+
+// ====MODAL====
+function om(id,show){var el=document.getElementById(id);if(el)el.style.display=(show===0?"none":"flex");}
+
+// ====CONFIRM====
+function showConfirm(icon,title,msg,okFn){
+  document.getElementById("confIcon").textContent=icon;document.getElementById("confTitle").textContent=title;document.getElementById("confMsg").textContent=msg;
+  document.getElementById("confOkBtn").onclick=function(){om("confirmModal",0);okFn();};om("confirmModal",1);
+}
+
+// ====TOAST====
+var ttmr=null;
+function showToast(msg){var el=document.getElementById("toast");el.textContent=msg;el.classList.add("show");clearTimeout(ttmr);ttmr=setTimeout(function(){el.classList.remove("show");},2600);}
+
+// ====개발자 이야기====
+function openDevStory(){om("devStoryModal",1);}
+function closeDevStory(e){if(e.target===document.getElementById("devStoryModal"))om("devStoryModal",0);}
+function openDonateModal(){om("devStoryModal",0);om("donateModal",1);}
+function closeDonate(e){if(e.target===document.getElementById("donateModal"))om("donateModal",0);}
+function openContactModal(){om("devStoryModal",0);om("contactModal",1);}
+function closeContact(e){if(e.target===document.getElementById("contactModal"))om("contactModal",0);}
+
+// ====기일/생일 당일 팝업====
+var apTimer=null;
+function checkAnniversaryPopup(){
+  var today=new Date();
+  var todayM=today.getMonth()+1;
+  var todayD=today.getDate();
+  var todayKey=todayM+"-"+todayD;
+  var shownKey="apShown_"+todayKey;
+  if(lg(shownKey,false))return;
+  var hit=null;
+  if(S.fAnniv){var fa=new Date(S.fAnniv+"T00:00:00");if(fa.getMonth()+1===todayM&&fa.getDate()===todayD)hit={emoji:"🕯️",title:(S.fn||"아버지")+"의 기일이에요"};}
+  if(!hit&&S.mAnniv){var ma=new Date(S.mAnniv+"T00:00:00");if(ma.getMonth()+1===todayM&&ma.getDate()===todayD)hit={emoji:"🕯️",title:(S.mn||"어머니")+"의 기일이에요"};}
+  if(!hit&&S.fBM&&S.fBD&&parseInt(S.fBM)===todayM&&parseInt(S.fBD)===todayD)hit={emoji:"🎂",title:(S.fn||"아버지")+"의 생신이에요"};
+  if(!hit&&S.mBM&&S.mBD&&parseInt(S.mBM)===todayM&&parseInt(S.mBD)===todayD)hit={emoji:"🎂",title:(S.mn||"어머니")+"의 생신이에요"};
+  if(!hit)return;
+  document.getElementById("apEmoji").textContent=hit.emoji;
+  document.getElementById("apTitle").textContent=hit.title;
+  var popup=document.getElementById("anniversaryPopup");
+  popup.style.display="flex";
+  ls(shownKey,true);
+  apTimer=setTimeout(function(){
+    var box=document.getElementById("anniversaryPopupBox");
+    if(box){box.style.transition="opacity 1.2s";box.style.opacity="0";}
+    setTimeout(function(){closeAnniversaryPopup();},1200);
+  },180000);
+}
+function closeAnniversaryPopup(){
+  clearTimeout(apTimer);
+  var popup=document.getElementById("anniversaryPopup");
+  if(popup)popup.style.display="none";
+  var box=document.getElementById("anniversaryPopupBox");
+  if(box){box.style.opacity="1";}
+}
+
+// ====UTIL====
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+</script>
+</body>
+</html>
